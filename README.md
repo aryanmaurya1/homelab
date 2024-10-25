@@ -5,11 +5,11 @@
 - It is recommended to use portainer to manage the containers and services.
 
 # Port Mapping
-| Port | Service           |
-|------|-------------------|
-| 8080 | Traefik Dashboard |
-| 8081 | Portainer         |
-| 8082 | Filebrowser       |
-| 8083 | qBittorrent       |
-| 8084 | Jellyfin          |
-| 8085 | Pyload            |
+| Port                | Service           |
+|---------------------|-------------------|
+| 8080                | Traefik Dashboard |
+| 8081                | Portainer         |
+| 8082                | Filebrowser       |
+| 8083, 6881, 6881/udp| qBittorrent       |
+| 8084                | Jellyfin          |
+| 8085                | Pyload            |
