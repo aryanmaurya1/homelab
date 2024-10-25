@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  pyload-ng:
+    image: lscr.io/linuxserver/pyload-ng:latest
+    container_name: pyload-ng
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/drive/pyload:/config
+      - /mnt/drive:/downloads
+    ports:
+      - 8085:8000
+    restart: always
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  traefik:
+    image: docker.io/traefik:v3.1
+    container_name: traefik
+    user: root
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/podman/podman.sock:/var/run/docker.sock
+      - /root/container/traefik/config:/etc/traefik
+    restart: always
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

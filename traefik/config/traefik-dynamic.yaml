@@ -1,0 +1,53 @@
+http:
+  routers:
+    Filebrowser:
+      rule: "Host(`file.mars.am`)"
+      service: filebrowser
+    Jellyfin:
+      rule: "Host(`jelly.mars.am`)"
+      service: jellyfin
+    Traefik:
+      rule: "Host(`trfk.mars.am`)"
+      service: dashboard@internal
+    Qbittorrent:
+      rule: "Host(`qbit.mars.am`)"
+      service: qbittorrent
+    Pyload:
+      rule: "Host(`pyload.mars.am`)"
+      service: pyload
+    Portainer:
+      rule: "Host(`ptnr.mars.am`)"
+      service: portainer
+    PortainerHttps:
+      rule: "Host(`ptnr.mars.am`)"
+      service: portainer
+      tls: {}
+      middlewares:
+        - redirect-to-http
+
+  services:
+    filebrowser:
+      loadBalancer:
+        servers:
+          - url: "http://filebrowser:80"
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://jellyfin:8096"
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "http://portainer:9000"
+    pyload:
+      loadBalancer:
+        servers:
+          - url: "http://pyload-ng:8000"
+    qbittorrent:
+      loadBalancer:
+        servers:
+          - url: "http://qbittorrent:8083"
+
+  middlewares:
+    redirect-to-http:
+      redirectScheme:
+        scheme: "http"

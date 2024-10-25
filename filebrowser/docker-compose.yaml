@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  filebrowser:
+    image: docker.io/filebrowser/filebrowser:s6
+    container_name: filebrowser
+    ports:
+      - "8082:80"
+    environment:
+      - PUID=0
+      - PGID=0
+    volumes:
+      - /mnt/drive:/srv
+      - /mnt/drive/filebrowser.db:/database/filebrowser.db
+      - /mnt/drive/settings.json:/config/settings.json
+    restart: always
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+

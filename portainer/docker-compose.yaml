@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  portainer:
+    image: docker.io/portainer/portainer-ee:2.21.3
+    container_name: portainer
+    command: --http-enabled
+    restart: always
+    ports:
+      - "8081:9000"
+    volumes:
+      - /var/run/podman/podman.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - traefik
+
+volumes:
+  portainer_data:
+
+networks:
+  traefik:
+    external: true

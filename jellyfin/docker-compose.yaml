@@ -1,0 +1,25 @@
+kversion: "3.8"
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/drive/jellyfin:/config
+      - /mnt/drive:/data
+    ports:
+      - 8084:8096
+    restart: always
+    networks:
+      - traefik
+    devices:
+      - /dev/dri:/dev/dri
+    hostname: jellyfin
+
+networks:
+  traefik:
+    external: true
+

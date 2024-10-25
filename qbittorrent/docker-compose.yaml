@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8083
+      - TORRENTING_PORT=6881
+    volumes:
+      - /mnt/drive/qbittorrent/appdata:/config
+      - /mnt/drive:/downloads
+    ports:
+      - 8083:8083
+      - 6881:6881
+      - 6881:6881/udp
+    restart: always
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
