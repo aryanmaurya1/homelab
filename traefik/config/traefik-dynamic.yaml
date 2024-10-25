@@ -1,20 +1,8 @@
 http:
   routers:
-    Filebrowser:
-      rule: "Host(`file.mars.am`)"
-      service: filebrowser
-    Jellyfin:
-      rule: "Host(`jelly.mars.am`)"
-      service: jellyfin
     Traefik:
       rule: "Host(`trfk.mars.am`)"
       service: dashboard@internal
-    Qbittorrent:
-      rule: "Host(`qbit.mars.am`)"
-      service: qbittorrent
-    Pyload:
-      rule: "Host(`pyload.mars.am`)"
-      service: pyload
     Portainer:
       rule: "Host(`ptnr.mars.am`)"
       service: portainer
@@ -24,28 +12,47 @@ http:
       tls: {}
       middlewares:
         - redirect-to-http
+    Filebrowser:
+      rule: "Host(`file.mars.am`)"
+      service: filebrowser
+    Qbittorrent:
+      rule: "Host(`qbit.mars.am`)"
+      service: qbittorrent
+    Jellyfin:
+      rule: "Host(`jelly.mars.am`)"
+      service: jellyfin
+    Pyload:
+      rule: "Host(`pyload.mars.am`)"
+      service: pyload
+    Filezilla:
+      rule: "Host(`filezilla.mars.am`)"
+      service: filezilla
 
   services:
-    filebrowser:
-      loadBalancer:
-        servers:
-          - url: "http://filebrowser:80"
-    jellyfin:
-      loadBalancer:
-        servers:
-          - url: "http://jellyfin:8096"
     portainer:
       loadBalancer:
         servers:
           - url: "http://portainer:9000"
-    pyload:
+    filebrowser:
       loadBalancer:
         servers:
-          - url: "http://pyload-ng:8000"
+          - url: "http://filebrowser:80"
     qbittorrent:
       loadBalancer:
         servers:
           - url: "http://qbittorrent:8083"
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://jellyfin:8096"
+    pyload:
+      loadBalancer:
+        servers:
+          - url: "http://pyload-ng:8000"
+    filezilla:
+      loadBalancer:
+        servers:
+          - url: "http://filezilla:5800"
 
   middlewares:
     redirect-to-http:

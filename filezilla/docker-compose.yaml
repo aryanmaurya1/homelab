@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  filezilla:
+    image: jlesage/filezilla
+    container_name: filezilla
+    ports:
+      - 8086:5800
+    volumes:
+      - /mnt/drive/filezilla:/config:rw
+      - /mnt/drive:/storage:rw
+    restart: always
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
