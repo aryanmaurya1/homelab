@@ -3,3 +3,13 @@
   as traefik uses internal docker network to route the traffic to the containers. We only need to expose traefik on port 80 and 443.
   Make sure all the containers and traefik are in the same docker network.
 - It is recommended to use portainer to manage the containers and services.
+
+# Port Mapping
+| Port | Service           |
+|------|-------------------|
+| 8080 | Traefik Dashboard |
+| 8081 | Portainer         |
+| 8082 | Filebrowser       |
+| 8083 | qBittorrent       |
+| 8084 | Jellyfin          |
+| 8085 | Pyload            |
