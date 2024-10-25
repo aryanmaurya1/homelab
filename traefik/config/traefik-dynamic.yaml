@@ -1,6 +1,9 @@
 http:
   routers:
-    Traefik:
+    TraefikApi:
+      rule: "Host(`trfk.mars.am`) && PathPrefix(`/api/`)"
+      service: api@internal
+    TraefikDashboard:
       rule: "Host(`trfk.mars.am`)"
       service: dashboard@internal
     Portainer:
