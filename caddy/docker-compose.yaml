@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  caddy:
+    image: docker.io/caddy:latest
+    container_name: caddy
+    restart: always
+    networks:
+      - traefik
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - /root/container/caddy/config/Caddyfile:/etc/caddy/Caddyfile
+      - /root/container/caddy/config/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
+networks:
+  traefik:
+    external: true
+
+volumes:
+  caddy_data:
+  caddy_config:

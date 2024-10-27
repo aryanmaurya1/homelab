@@ -1,0 +1,20 @@
+ptnr.mars.am {
+  reverse_proxy http://portainer:9000
+  tls internal
+}
+
+pi.mars.am {
+  reverse_proxy http://alpine.mars.am:8080
+  tls internal
+}
+
+cloud.mars.am {
+  reverse_proxy http://alpine.mars.am
+  tls internal
+}
+
+ckpt.mars.am {
+  redir / https://ckpt.mars.am:9090
+  tls internal
+}
+

@@ -4,9 +4,9 @@ services:
     image: docker.io/pihole/pihole:latest
     hostname: pihole
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "8080:80/tcp"
+      - 53:53/tcp
+      - 53:53/udp
+      - 8080:80/tcp
     environment:
       TZ: 'Asia/Kolkata'
       WEBPASSWORD: 'admin'

@@ -6,7 +6,7 @@ services:
     command: --http-enabled
     restart: always
     ports:
-      - "8081:9000"
+      - 8081:9000
     volumes:
       - /var/run/podman/podman.sock:/var/run/docker.sock
       - portainer_data:/data
