@@ -1,5 +1,7 @@
 log:
-  level: DEBUG
+  level: TRACE
+  filePath: "/root/logs/traefik.log"
+  format: json
 
 entryPoints:
   web:

@@ -11,6 +11,7 @@ services:
     volumes:
       - /var/run/podman/podman.sock:/var/run/docker.sock
       - /root/container/traefik/config:/etc/traefik
+      - /root/logs:/root/logs
     restart: always
     networks:
       - traefik
