@@ -27,7 +27,6 @@
 | Portainer-Agent   | 9001                 | 9001                  |
 
 # Traefik Summary
---
 ## Routes
 | Router Name      | Host Rule      | Service        | TLS | Middlewares       |
 |------------------|----------------|----------------|-----|-------------------|
