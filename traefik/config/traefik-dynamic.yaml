@@ -30,6 +30,15 @@ http:
     Filezilla:
       rule: "Host(`filezilla.mars.am`)"
       service: filezilla
+    Nextcloud:
+      rule: "Host(`cloud.mars.am`)"
+      service: nextcloud
+    Pihole:
+      rule: "Host(`pi.mars.am`)"
+      service: pihole
+    Cockpit:
+      rule: "Host(`ckpt.mars.am`)"
+      service: cockpit
 
   services:
     portainer:
@@ -56,6 +65,22 @@ http:
       loadBalancer:
         servers:
           - url: "http://filezilla:5800"
+
+    # Pihole and Nextcloud are deployed in separate Alpine Linux VM.
+    nextcloud:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.0.164:80"
+    pihole:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.0.164:8080"
+
+    # Cockpit is central management dashboard for machines.
+    cockpit:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.0.140:9090"
 
   middlewares:
     redirect-to-http:

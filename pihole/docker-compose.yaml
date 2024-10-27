@@ -2,20 +2,15 @@ services:
   pihole:
     container_name: pihole
     image: docker.io/pihole/pihole:latest
+    hostname: pihole
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "8087:80/tcp"
+      - "8080:80/tcp"
     environment:
       TZ: 'Asia/Kolkata'
       WEBPASSWORD: 'admin'
     volumes:
-      - /root/container/pihole/config:/etc/pihole
-      - /root/container/pihole/dnsmasq.d:/etc/dnsmasq.d
+      - /mnt/pihole/config:/etc/pihole
+      - /mnt/pihole/dnsmasq.d:/etc/dnsmasq.d
     restart: always
-    networks:
-      - traefik
-
-networks:
-  traefik:
-    external: true

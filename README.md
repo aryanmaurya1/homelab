@@ -4,14 +4,40 @@
 - Traefik uses internal docker network to route the traffic to the containers. We only need to expose traefik on port 80 and 443.
 - Make sure all the containers and traefik are in the same docker network.
 - It is recommended to use portainer to manage the containers and services.
+- Cockpit is central management dashboard for machines. Management dashboard is running on port 9090.
+- All custom DNS is handled by Pihole.
 
 # Host Port Mapping
 | Service           | Host Port            | Container Port        |
 |-------------------|----------------------|-----------------------|
-| Traefik Dashboard | 8080                 | 8080                  |
+| Traefik           | 80, 443              | 80, 443               |
 | Portainer         | 8081                 | 9000                  |
 | Filebrowser       | 8082                 | 80                    |
 | qBittorrent       | 8083, 6881, 6881/udp | 8083, 6881, 6881/udp  |
 | Jellyfin          | 8084                 | 8096                  |
 | Pyload            | 8085                 | 8000                  |
 | Filezilla         | 8086                 | 5800                  |
+
+- `pihole` and `nextcloud` are deployed in separate Alpine Linux VM.
+
+| Service           | Host Port            | Container Port        |
+|-------------------|----------------------|-----------------------|
+| Pihole            | 53/tcp, 53/udp, 8080 | 53/tcp, 53/udp, 80    |
+| Nextcloud         | 80                   | 80                    |
+| Portainer-Agent   | 9001                 | 9001                  |
+
+# DNS
+| Domain Name    | Service            |
+|----------------|--------------------|
+| trfk.mars.am   | api@internal       |
+| trfk.mars.am   | dashboard@internal |
+| ptnr.mars.am   | portainer          |
+| ptnr.mars.am   | portainer (HTTPS)  |
+| file.mars.am   | filebrowser        |
+| qbit.mars.am   | qbittorrent        |
+| jelly.mars.am  | jellyfin           |
+| pyload.mars.am | pyload             |
+| filezilla.mars.am | filezilla       |
+| cloud.mars.am  | nextcloud          |
+| pi.mars.am     | pihole             |
+| ckpt.mars.am   | cockpit            |
