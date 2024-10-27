@@ -26,18 +26,36 @@
 | Nextcloud         | 80                   | 80                    |
 | Portainer-Agent   | 9001                 | 9001                  |
 
-# DNS
-| Domain Name    | Service            |
-|----------------|--------------------|
-| trfk.mars.am   | api@internal       |
-| trfk.mars.am   | dashboard@internal |
-| ptnr.mars.am   | portainer          |
-| ptnr.mars.am   | portainer (HTTPS)  |
-| file.mars.am   | filebrowser        |
-| qbit.mars.am   | qbittorrent        |
-| jelly.mars.am  | jellyfin           |
-| pyload.mars.am | pyload             |
-| filezilla.mars.am | filezilla       |
-| cloud.mars.am  | nextcloud          |
-| pi.mars.am     | pihole             |
-| ckpt.mars.am   | cockpit            |
+## Routes
+| Router Name      | Host Rule      | Service        | TLS | Middlewares       |
+|------------------|----------------|----------------|-----|-------------------|
+| TraefikApi       | trfk.mars.am   | api@internal   | No  | None              |
+| TraefikDashboard | trfk.mars.am   | dashboard@internal | No  | None              |
+| Portainer        | ptnr.mars.am   | portainer      | No  | None              |
+| PortainerHttps   | ptnr.mars.am   | portainer      | Yes | redirect-to-http  |
+| Filebrowser      | file.mars.am   | filebrowser    | No  | None              |
+| Qbittorrent      | qbit.mars.am   | qbittorrent    | No  | None              |
+| Jellyfin         | jelly.mars.am  | jellyfin       | No  | None              |
+| Pyload           | pyload.mars.am | pyload         | No  | None              |
+| Filezilla        | filezilla.mars.am | filezilla    | No  | None              |
+| Nextcloud        | cloud.mars.am  | nextcloud      | No  | None              |
+| Pihole           | pi.mars.am     | pihole         | No  | None              |
+| Cockpit          | ckpt.mars.am   | cockpit        | No  | None              |
+
+## Services Summary
+| Service Name | URL                        |
+|--------------|----------------------------|
+| portainer    | http://portainer:9000      |
+| filebrowser  | http://filebrowser:80      |
+| qbittorrent  | http://qbittorrent:8083    |
+| jellyfin     | http://jellyfin:8096       |
+| pyload       | http://pyload-ng:8000      |
+| filezilla    | http://filezilla:5800      |
+| nextcloud    | http://192.168.0.164:80    |
+| pihole       | http://192.168.0.164:8080  |
+| cockpit      | http://192.168.0.140:9090  |
+
+## Middlewares
+| Middleware Name | Type           | Details         |
+|-----------------|----------------|-----------------|
+| redirect-to-http | redirectScheme | scheme: "http"  |
