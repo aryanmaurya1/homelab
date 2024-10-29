@@ -1,43 +1,43 @@
 http:
   routers:
     TraefikApi:
-      rule: "Host(`trfk.mars.am`) && PathPrefix(`/api/`)"
+      rule: "Host(`trfk.home.lab`) && PathPrefix(`/api/`)"
       service: api@internal
     TraefikDashboard:
-      rule: "Host(`trfk.mars.am`)"
+      rule: "Host(`trfk.home.lab`)"
       service: dashboard@internal
     Portainer:
-      rule: "Host(`ptnr.mars.am`)"
+      rule: "Host(`ptnr.home.lab`)"
       service: portainer
     PortainerHttps:
-      rule: "Host(`ptnr.mars.am`)"
+      rule: "Host(`ptnr.home.lab`)"
       service: portainer
       tls: {}
       middlewares:
         - redirect-to-http
     Filebrowser:
-      rule: "Host(`file.mars.am`)"
+      rule: "Host(`file.home.lab`)"
       service: filebrowser
     Qbittorrent:
-      rule: "Host(`qbit.mars.am`)"
+      rule: "Host(`qbit.home.lab`)"
       service: qbittorrent
     Jellyfin:
-      rule: "Host(`jelly.mars.am`)"
+      rule: "Host(`jelly.home.lab`)"
       service: jellyfin
     Pyload:
-      rule: "Host(`pyload.mars.am`)"
+      rule: "Host(`pyload.home.lab`)"
       service: pyload
     Filezilla:
-      rule: "Host(`filezilla.mars.am`)"
+      rule: "Host(`filezilla.home.lab`)"
       service: filezilla
     Nextcloud:
-      rule: "Host(`cloud.mars.am`)"
+      rule: "Host(`cloud.home.lab`)"
       service: nextcloud
     Pihole:
-      rule: "Host(`pi.mars.am`)"
+      rule: "Host(`pi.home.lab`)"
       service: pihole
     Cockpit:
-      rule: "Host(`ckpt.mars.am`)"
+      rule: "Host(`ckpt.home.lab`)"
       service: cockpit
 
   services:
@@ -70,17 +70,17 @@ http:
     nextcloud:
       loadBalancer:
         servers:
-          - url: "http://192.168.0.164:80"
+          - url: "http://vm1.home.lab"
     pihole:
       loadBalancer:
         servers:
-          - url: "http://192.168.0.164:8080"
+          - url: "http://vm1.home.lab:8080"
 
     # Cockpit is central management dashboard for machines.
     cockpit:
       loadBalancer:
         servers:
-          - url: "http://192.168.0.140:9090"
+          - url: "http://host.home.lab:9090"
 
   middlewares:
     redirect-to-http:

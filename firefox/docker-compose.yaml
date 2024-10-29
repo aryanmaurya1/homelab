@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  firefox:
+    image: docker.io/jlesage/firefox
+    container_name: firefox
+    hostname: firefox
+    restart: always
+    environment:
+      - WEB_AUDIO=1
+      - SECURE_CONNECTION=1
+      - WEB_AUTHENTICATION=1
+      - WEB_AUTHENTICATION_USERNAME=admin
+      - WEB_AUTHENTICATION_PASSWORD=admin
+      - TZ=Asia/Kolkata
+      - KEEP_APP_RUNNING=1
+    networks:
+      - traefik
+    ports:
+      - 8088:5800
+    volumes:
+      - "/mnt/drive:/config:rw"
+
+networks:
+  traefik:
+    external: true

@@ -1,20 +1,77 @@
-ptnr.mars.am {
+###################################
+# Homepage
+###################################
+host.home.lab {
+  root * /srv
+  file_server
+  tls internal
+}
+
+###################################
+# Host Machine Management Dashboard
+###################################
+ckpt.home.lab {
+  redir / https://host.home.lab:9090
+  tls internal
+}
+
+###################################
+# Alpine Linux VM
+###################################
+cloud.home.lab {
+  reverse_proxy http://vm1.home.lab
+  tls internal
+}
+
+pi.home.lab {
+  reverse_proxy http://vm1.home.lab:8080
+  tls internal
+}
+
+###################################
+# Docker Containers
+###################################
+file.home.lab {
+  reverse_proxy http://filebrowser:80
+  tls internal
+}
+
+###################################
+# Filezilla (using reverse proxy cause too many redirects error)
+###################################
+filezilla.home.lab {
+  redir https://filezilla.home.lab:8086
+  tls internal
+}
+
+###################################
+# Firefox (using reverse proxy cause too many redirects error)
+###################################
+firefox.home.lab {
+  redir https://firefox.home.lab:8088
+  tls internal
+}
+
+jelly.home.lab {
+  reverse_proxy http://jellyfin:8096
+  tls internal
+}
+
+ptnr.home.lab {
   reverse_proxy http://portainer:9000
   tls internal
 }
 
-pi.mars.am {
-  reverse_proxy http://alpine.mars.am:8080
+pyload.home.lab {
+  reverse_proxy http://pyload-ng:8000
   tls internal
 }
 
-cloud.mars.am {
-  reverse_proxy http://alpine.mars.am
+qbit.home.lab {
+  reverse_proxy http://qbittorrent:8083
   tls internal
 }
 
-ckpt.mars.am {
-  redir / https://ckpt.mars.am:9090
-  tls internal
-}
-
+###################################
+# End of Docker Containers
+###################################
