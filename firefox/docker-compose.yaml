@@ -16,7 +16,7 @@ services:
     networks:
       - traefik
     ports:
-      - 8088:5800
+      - 8087:5800
     volumes:
       - "/mnt/drive:/config:rw"
 
