@@ -1,0 +1,22 @@
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    hostname: nginxpm
+    container_name: nginxpm
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:81
+    volumes:
+      - /root/container/nginx-proxy-manager/data:/data
+      - nginx-proxy-manager:/etc/letsencrypt
+    networks:
+      - traefik
+
+volumes:
+  nginx-proxy-manager:
+
+networks:
+  traefik:
+    external: true
