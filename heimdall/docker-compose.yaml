@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    hostname: heimdall
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    networks:
+      - traefik
+    volumes:
+      - /root/container/heimdall/data:/config
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:80
+    restart: always
+
+networks:
+  traefik:
+    external: true

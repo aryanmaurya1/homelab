@@ -1,0 +1,46 @@
+services: 
+  virt-manager:
+    image: mber5/virt-manager:latest
+    restart: always
+    ports:
+      - 8088:80
+    hostname: vmm
+    container_name: vmm
+    environment:
+    # Set DARK_MODE to true to enable dark mode
+      DARK_MODE: false
+
+    # Set HOSTS: "['qemu:///session']" to connect to a user session
+      HOSTS: "['qemu:///system']"
+
+    # If on an Ubuntu host (or any host with the libvirt AppArmor policy,
+    # you will need to use an ssh connection to localhost
+    # or use qemu:///system and uncomment the below line
+
+    # privileged: true
+
+    volumes:
+      - "/var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock"
+      - "/var/lib/libvirt/images:/var/lib/libvirt/images"
+    devices:
+      - "/dev/kvm:/dev/kvm"
+
+# If running KVM and virt-manager on different hosts, uncomment the following:
+# services: 
+#   virt-manager:
+#     image: mber5/virt-manager:latest
+#     restart: always
+#     ports:
+#       - 8089:80
+#     hostname: vmm
+#     container_name: vmm
+#     environment:
+#     # Set DARK_MODE to true to enable dark mode
+#       DARK_MODE: false
+
+#       # Substitute comma separated qemu connect strings, e.g.: 
+#       # HOSTS: "['qemu+ssh://user@host1/system', 'qemu+ssh://user@host2/system']"
+#       HOSTS: "[]"
+#     # volumes:
+#       # If not using password auth, substitute location of ssh private key, e.g.:
+#       # - /home/user/.ssh/id_rsa:/root/.ssh/id_rsa:ro

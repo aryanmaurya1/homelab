@@ -13,7 +13,7 @@
 ### Container Port Mapping
 | Service           | Container Name | Host Port            | Container Port        |
 |-------------------|----------------|----------------------|-----------------------|
-| Heimdall          | heimdall       | 8081                 |                       |
+| Heimdall          | heimdall       | 8080, 80, 443        | 80, 443               |
 | Portainer         | portainer      | 8081                 | 9000                  |
 | Filebrowser       | filebrowser    | 8082                 | 80                    |
 | qBittorrent       | qbittorrent    | 8083, 6881, 6881/udp | 8083, 6881, 6881/udp  |
@@ -21,6 +21,7 @@
 | Pyload-NG         | pyload-ng      | 8085                 | 8000                  |
 | Filezilla         | filezilla      | 8086                 | 5800                  |
 | Firefox           | firefox        | 8087                 | 5800                  |
+| Virt-Manager      | virt-manager   | 8088                 | 80                    |
 
 - `pihole` and `nextcloud` are deployed in separate Alpine Linux VM.
 
