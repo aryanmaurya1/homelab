@@ -11,22 +11,24 @@
 | Cockpit           | 9090                 |
 
 ### Container Port Mapping
-| Service           | Container Name | Host Port            | Container Port        |
-|-------------------|----------------|----------------------|-----------------------|
-| Heimdall          | heimdall       | 8080, 80, 443        | 80, 443               |
-| Portainer         | portainer      | 8081                 | 9000                  |
-| Filebrowser       | filebrowser    | 8082                 | 80                    |
-| qBittorrent       | qbittorrent    | 8083, 6881, 6881/udp | 8083, 6881, 6881/udp  |
-| Jellyfin          | jellyfin       | 8084                 | 8096                  |
-| Pyload-NG         | pyload-ng      | 8085                 | 8000                  |
-| Filezilla         | filezilla      | 8086                 | 5800                  |
-| Firefox           | firefox        | 8087                 | 5800                  |
-| Virt-Manager      | virt-manager   | 8088                 | 80                    |
+| Service           | Container Name | Host Port            | Container Port        | Active |
+|-------------------|----------------|----------------------|-----------------------|--------|
+| Heimdall          | heimdall       | 8080, 80, 443        | 80, 443               | [x]    |
+| Portainer         | portainer      | 8081                 | 9000                  | [x]    |
+| Filebrowser       | filebrowser    | 8082                 | 80                    | [x]    |
+| qBittorrent       | qbittorrent    | 8083, 6881, 6881/udp | 8083, 6881, 6881/udp  | [x]    |
+| Jellyfin          | jellyfin       | 8084                 | 8096                  | [x]    |
+| Pyload-NG         | pyload-ng      | 8085                 | 8000                  | [x]    |
+| Filezilla         | filezilla      | 8086                 | 5800                  | [x]    |
+| Firefox           | firefox        | 8087                 | 5800                  | [x]    |
+| Virt-Manager      | virt-manager   | 8088                 | 80                    | [ ]    |
+| Dim               | dim            | 8089                 | 8000                  | [ ]    |
+| Filestash         | filestash      | 8090                 | 8334                  | [ ]    |
 
 - `pihole` and `nextcloud` are deployed in separate Alpine Linux VM.
 
-| Service           | Host Port            | Container Port        |
-|-------------------|----------------------|-----------------------|
-| Pihole            | 53/tcp, 53/udp, 8080 | 53/tcp, 53/udp, 80    |
-| Nextcloud         | 80                   | 80                    |
-| Portainer-Agent   | 9001                 | 9001                  |
+| Service           | Host Port            | Container Port        | Active |
+|-------------------|----------------------|-----------------------|--------|
+| Pihole            | 53/tcp, 53/udp, 8080 | 53/tcp, 53/udp, 80    | [x]    |
+| Nextcloud         | 80                   | 80                    | [ ]    |
+| Portainer-Agent   | 9001                 | 9001                  | [x]    |

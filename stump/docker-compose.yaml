@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  stump:
+    image: aaronleopold/stump:latest
+    container_name: stump
+    hostname: stump
+    volumes:
+      - /root/container/stump/data:/config
+      - /mnt/drive/books:/data
+    restart: always
+    ports:
+      - 8091:10801
+    environment:
+      - PUID=0
+      - PGID=0
+      - STUMP_CONFIG_DIR=/config
