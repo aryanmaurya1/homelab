@@ -54,4 +54,4 @@ update-grub
 | Initial ramdisk image              | `/boot/initrd.img-<version>`         |
 | System map                         | `/boot/System.map-<version>`         |
 | Kernel configuration file          | `/boot/config-<version>`             |
-| Kernel modules                     | `/lib/modules/<version>` directory   |
+| Kernel modules                     | `/lib/modules/<version>/`         |
