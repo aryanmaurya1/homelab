@@ -45,9 +45,13 @@ make install
 update-initramfs -u -k all
 update-grub
 ```
+
 - Kernel is installed in `/boot` directory.
-  - Kernel image is in `/boot/vmlinuz-<version>`
-  - Initial ramdisk image is in `/boot/initrd.img-<version>`
-  - System map is in `/boot/System.map-<version>`
-- Kernel configuration file is in `/boot/config-<version>`
-- Kernel modules are installed in `/lib/modules/<version>` directory.
+
+| Description                        | Path                                 |
+|------------------------------------|--------------------------------------|
+| Kernel image                       | `/boot/vmlinuz-<version>`            |
+| Initial ramdisk image              | `/boot/initrd.img-<version>`         |
+| System map                         | `/boot/System.map-<version>`         |
+| Kernel configuration file          | `/boot/config-<version>`             |
+| Kernel modules                     | `/lib/modules/<version>` directory   |
