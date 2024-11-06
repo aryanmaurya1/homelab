@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  kavita:
+    image: lscr.io/linuxserver/kavita:latest
+    container_name: kavita
+    hostname: kavita
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Kolkata
+    volumes:
+      - /root/container/Stacks/kavita/data:/config
+      - /mnt/drive/books:/data
+    ports:
+      - 8093:5000
+    restart: always

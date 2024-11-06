@@ -11,7 +11,7 @@ services:
     networks:
       - traefik
     volumes:
-      - /root/container/heimdall/data:/config
+      - /root/container/Stacks/heimdall/data:/config
     ports:
       - 80:80
       - 443:443

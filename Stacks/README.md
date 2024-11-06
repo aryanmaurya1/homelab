@@ -24,6 +24,9 @@
 | Virt-Manager      | virt-manager   | 8088                 | 80                    | [ ]    |
 | Dim               | dim            | 8089                 | 8000                  | [ ]    |
 | Filestash         | filestash      | 8090                 | 8334                  | [ ]    |
+| Stump             | stump          | 8091                 | 10801                 | [ ]    |
+| Komga             | komga          | 8092                 | 25600                 | [ ]    |
+| Kavita            | kavita         | 8093                 | 8080                  | [x]    |
 
 - `pihole` and `nextcloud` are deployed in separate Alpine Linux VM.
 

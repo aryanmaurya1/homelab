@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  komga:
+    image: gotson/komga
+    container_name: komga
+    volumes:
+      - type: bind
+        source: /root/container/Stacks/komga/data
+        target: /config
+      - type: bind
+        source: /mnt/drive/books
+        target: /data
+    ports:
+      - 8092:25600
+    user: 0:0
+    environment:
+      - TZ=Asia/Kolkata
+    restart: always

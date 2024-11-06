@@ -26,6 +26,9 @@ Web servers also contains there configuration files along with `docker-compose` 
 - Filestash
 - Pihole
 - Nextcloud
+- Stump
+- Komga
+- Kavita
 
 ## Configs
 - [Bridge Interface](Configs/bridge_interface.conf)
