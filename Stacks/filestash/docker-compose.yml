@@ -2,7 +2,7 @@ version: '3.8'
 services:
   app:
     container_name: filestash
-    image: machines/filestash
+    image: docker.io/dmachines/filestash
     hostname: filestash
     restart: always
     environment:
@@ -10,17 +10,17 @@ services:
     - GDRIVE_CLIENT_ID=
     - GDRIVE_CLIENT_SECRET=
     - DROPBOX_CLIENT_ID=
-    - ONLYOFFICE_URL=http://onlyoffice
+    # - ONLYOFFICE_URL=http://onlyoffice
     ports:
     - "8090:8334"
     volumes:
     - filestash:/app/data/state/
 
-  onlyoffice:
-    container_name: filestash_oods
-    hostname: filestash_oods
-    image: onlyoffice/documentserver:7.1
-    restart: always
+  # onlyoffice:
+  #   container_name: filestash_oods
+  #   hostname: filestash_oods
+  #   image: docker.io/onlyoffice/documentserver:7.1
+  #   restart: always
 
 volumes:
   filestash: {}
