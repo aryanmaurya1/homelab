@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  code-server:
+    image: codercom/code-server:latest
+    container_name: code-server
+    hostname: code-server
+    ports:
+      - 8094:8080
+    volumes:
+      - "/root/container/codeserver/data/.local:/home/coder/.local"
+      - "/root/container/codeserver/data/.config:/home/coder/.config"
+      - "/mnt/drive/cloud/kdev:/home/coder/project"
+    user: 0:0
+    environment:
+      - DOCKER_USER=${USER}
+    restart: always
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
