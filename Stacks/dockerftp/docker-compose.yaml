@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  ftp-server:
+    container_name: dockerftp
+    environment:
+      - FTP_USER=admin
+      - FTP_PASS=admin
+    image: garethflowers/ftp-server
+    ports:
+      - "8095:20"
+      - "8096:21"
+    volumes:
+      - "/mnt/drive:/home/admin"
+    restart: always
+    networks:
+      - traefik
+    hostname: dockerftp
+
+networks:
+  traefik:
+    external: true

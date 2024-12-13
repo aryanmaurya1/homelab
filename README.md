@@ -30,6 +30,7 @@ Web servers also contains there configuration files along with `docker-compose` 
 - [Komga](https://komga.org/docs/installation/docker/)
 - [Kavita](https://hub.docker.com/r/linuxserver/kavita)
 - [Code-Server](https://hub.docker.com/r/linuxserver/code-server)
+- [DockerFTP](https://github.com/garethflowers/docker-ftp-server)
 
 ## Configs
 - [Bridge Interface](Configs/bridge_interface.conf)
