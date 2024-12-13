@@ -28,7 +28,7 @@
 | Komga             | komga          | 8092                 | 25600                 | [ ]    |
 | Kavita            | kavita         | 8093                 | 8080                  | [x]    |
 | Code-Server       | code-server    | 8094                 | 8080                  | [ ]    |
-| DockerFTP         | dockerftp      | 8095, 8096           | 20, 21                | [ ]    |
+| DockerFTP         | dockerftp      | 8095, 8096           | 20, 21                | [x]    |
 
 - `pihole` and `nextcloud` are deployed in separate Alpine Linux VM.
 
