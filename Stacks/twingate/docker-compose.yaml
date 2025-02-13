@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  twingate-jolly-serval:
+    image: twingate/connector:1
+    container_name: twingate-jolly-serval
+    restart: unless-stopped
+    pull_policy: always
+    sysctls:
+      - net.ipv4.ping_group_range=0 2147483647
+    environment:
+      TWINGATE_NETWORK: "rynm"
+      TWINGATE_ACCESS_TOKEN: "*************"
+      TWINGATE_REFRESH_TOKEN: "*************"
+      TWINGATE_LABEL_HOSTNAME: "${HOSTNAME}"
+      TWINGATE_LABEL_DEPLOYED_BY: "docker"
