@@ -32,5 +32,25 @@ Web servers also contains there configuration files along with `docker-compose` 
 - [Code-Server](https://hub.docker.com/r/linuxserver/code-server)
 - [DockerFTP](https://github.com/garethflowers/docker-ftp-server)
 
+#### Machines
+| Hostname  | Purpose                          | Operating System  | Type       |
+|-----------|----------------------------------|-------------------|------------|
+| m1.io     | Virtualization host for all VMs | Debian           | Bare Metal |
+| m2.io     | Dedicated DNS server            | Alpine Linux     | VM         |
+| m3.io     | Single-node K3s cluster         | Debian           | VM         |
+| m4.io     | Development.                    | Debian           | VM         |
+| m5.io     | Raspberry Pi for critical workloads | Ubuntu Server   | Bare Metal |
+
+### Services Running on Raspberry Pi
+
+| Service        | Container Name      | Host Port                                | Container Port                      | Active |
+|---------------|---------------------|------------------------------------------|--------------------------------------|--------|
+| uptime-kuma   | uptime-kuma         | 0.0.0.0:3001, :::3001                    | 3001/tcp                            | ✅     |
+| portainer     | portainer           | 0.0.0.0:8000, :::8000, 0.0.0.0:9443, :::9443 | 8000/tcp, 9443/tcp, 9000/tcp        | ✅     |
+| twingate      | twingate-jolly-serval | None                                     | None                                 | ✅     |
+| pihole        | pihole              | 0.0.0.0:53, :::53, 0.0.0.0:80, :::80     | 53/tcp, 80/tcp, 53/udp, 67/udp      | ✅     |
+| portainer_agent | portainer_agent   | 0.0.0.0:9001, :::9001                    | 9001/tcp                            | ✅     |
+
+
 ## Configs
 - [Bridge Interface](Configs/bridge_interface.conf)
