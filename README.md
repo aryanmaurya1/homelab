@@ -31,6 +31,8 @@ Web servers also contains there configuration files along with `docker-compose` 
 - [Kavita](https://hub.docker.com/r/linuxserver/kavita)
 - [Code-Server](https://hub.docker.com/r/linuxserver/code-server)
 - [DockerFTP](https://github.com/garethflowers/docker-ftp-server)
+- [Immich](https://immich.app/docs/install/docker-compose)
+- [NFS-Server](https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/)
 
 #### Machines
 | Hostname  | Purpose                          | Operating System  | Type       |
