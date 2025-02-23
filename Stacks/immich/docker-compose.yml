@@ -5,19 +5,18 @@ services:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:release
     volumes:
-      - /mnt/drive/immich:/usr/src/app/upload
+      - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - UPLOAD_LOCATION=/mnt/drive/immich
-      - DB_DATA_LOCATION=/mnt/drive/immich/pg_data
+      - UPLOAD_LOCATION=${UPLOAD_LOCATION}
       - TZ=Asia/Calcutta
       - IMMICH_VERSION=release
-      - DB_PASSWORD=postgres
-      - DB_USERNAME=postgres
-      - DB_DATABASE_NAME=immich
-
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_DATABASE_NAME=${DB_DATABASE_NAME}
     ports:
-      - '8097:2283'
+      - '80:2283'
+      - '443:2283'
     depends_on:
       - redis
       - database
@@ -25,22 +24,21 @@ services:
     healthcheck:
       disable: false
 
-  immich-machine-learning:
-    container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:release
-    volumes:
-      - model-cache:/cache
-    environment:
-      - UPLOAD_LOCATION=/mnt/drive/immich
-      - DB_DATA_LOCATION=/mnt/drive/immich/pg_data
-      - TZ=Asia/Calcutta
-      - IMMICH_VERSION=release
-      - DB_PASSWORD=postgres
-      - DB_USERNAME=postgres
-      - DB_DATABASE_NAME=immich
-    restart: always
-    healthcheck:
-      disable: false
+  # immich-machine-learning:
+  #   container_name: immich_machine_learning
+  #   image: ghcr.io/immich-app/immich-machine-learning:release
+  #   volumes:
+  #     - model-cache:/cache
+  #   environment:
+  #     - UPLOAD_LOCATION=${UPLOAD_LOCATION}
+  #     - TZ=Asia/Calcutta
+  #     - IMMICH_VERSION=release
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_DATABASE_NAME=${DB_DATABASE_NAME}
+  #   restart: always
+  #   healthcheck:
+  #     disable: false
 
   redis:
     container_name: immich_redis
@@ -58,13 +56,13 @@ services:
       POSTGRES_DB: immich
       POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
-      - /mnt/drive/immich/pg_data:/var/lib/postgresql/data
+      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
     command: >-
       postgres
       -c shared_preload_libraries=vectors.so
       -c 'search_path="$$user", public, vectors'
       -c logging_collector=on
-      -c max_wal_size=2GB
+      -c max_wal_size=1GB
       -c shared_buffers=512MB
       -c wal_compression=on
     restart: always
