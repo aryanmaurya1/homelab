@@ -1,0 +1,17 @@
+FROM debian:latest
+
+RUN apt update && \
+    apt install -y wget fuse && \
+    mkdir -p /app /data /credentials
+
+WORKDIR /app
+
+RUN wget https://github.com/GoogleCloudPlatform/gcsfuse/releases/download/v2.10.0/gcsfuse_2.10.0_amd64.deb && \
+    dpkg -i gcsfuse_2.10.0_amd64.deb && \
+    rm gcsfuse_2.10.0_amd64.deb
+
+COPY main.sh /app/
+
+RUN chmod +x /app/main.sh
+
+CMD ["bash", "/app/main.sh"]
