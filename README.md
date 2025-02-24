@@ -48,7 +48,6 @@ Web servers also contains there configuration files along with `docker-compose` 
 
 | Service        | Container Name      | Host Port                                | Container Port                      | Active |
 |---------------|---------------------|------------------------------------------|--------------------------------------|--------|
-| uptime-kuma   | uptime-kuma         | 0.0.0.0:3001, :::3001                    | 3001/tcp                            | ✅     |
 | portainer     | portainer           | 0.0.0.0:8000, :::8000, 0.0.0.0:9443, :::9443 | 8000/tcp, 9443/tcp, 9000/tcp        | ✅     |
 | pihole        | pihole              | 0.0.0.0:53, :::53, 0.0.0.0:80, :::80     | 53/tcp, 80/tcp, 53/udp, 67/udp      | ✅     |
 | portainer_agent | portainer_agent   | 0.0.0.0:9001, :::9001                    | 9001/tcp                            | ✅     |
