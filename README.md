@@ -42,6 +42,7 @@ Web servers also contains there configuration files along with `docker-compose` 
 | m3.io     | Single-node K3s cluster         | Debian           | VM         |
 | m4.io     | Development.                    | Debian           | VM         |
 | m5.io     | Raspberry Pi for critical workloads | Ubuntu Server   | Bare Metal |
+| m6.io     | Immich Server (uses gcsfuse)        | Debian           | VM         |
 
 ### Services Running on Raspberry Pi
 
@@ -49,7 +50,6 @@ Web servers also contains there configuration files along with `docker-compose` 
 |---------------|---------------------|------------------------------------------|--------------------------------------|--------|
 | uptime-kuma   | uptime-kuma         | 0.0.0.0:3001, :::3001                    | 3001/tcp                            | ✅     |
 | portainer     | portainer           | 0.0.0.0:8000, :::8000, 0.0.0.0:9443, :::9443 | 8000/tcp, 9443/tcp, 9000/tcp        | ✅     |
-| twingate      | twingate-jolly-serval | None                                     | None                                 | ✅     |
 | pihole        | pihole              | 0.0.0.0:53, :::53, 0.0.0.0:80, :::80     | 53/tcp, 80/tcp, 53/udp, 67/udp      | ✅     |
 | portainer_agent | portainer_agent   | 0.0.0.0:9001, :::9001                    | 9001/tcp                            | ✅     |
 
