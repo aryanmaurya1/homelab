@@ -13,13 +13,7 @@ services:
       - WEB_AUTHENTICATION_PASSWORD=admin
       - TZ=Asia/Kolkata
       - KEEP_APP_RUNNING=1
-    networks:
-      - traefik
     ports:
-      - 8087:5800
+      - 8081:5800
     volumes:
-      - "/mnt/drive:/config:rw"
-
-networks:
-  traefik:
-    external: true
+      - /ctnr/data:/config:rw

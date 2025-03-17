@@ -1,0 +1,19 @@
+services:
+  librewolf:
+    image: lscr.io/linuxserver/librewolf:latest
+    container_name: librewolf
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - KEEP_APP_RUNNING=1
+      - CUSTOM_USER=admin
+      - PASSWORD=admin
+      - TITLE=Librewolf
+      - NO_DECOR=true
+    volumes:
+      - /ctnr/data:/config
+    ports:
+      - 8082:3000
+    shm_size: "1gb"
+    restart: always

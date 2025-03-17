@@ -1,0 +1,19 @@
+services:
+  webcord:
+    image: lscr.io/linuxserver/webcord:latest
+    container_name: webcord
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - KEEP_APP_RUNNING=1
+      - CUSTOM_USER=admin
+      - PASSWORD=admin
+      - TITLE=webcord
+      - NO_DECOR=true
+    volumes:
+      - /ctnr/data:/config
+    ports:
+      - 8083:3000
+    shm_size: "1gb"
+    restart: always
