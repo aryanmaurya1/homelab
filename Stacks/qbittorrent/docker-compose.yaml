@@ -7,19 +7,13 @@ services:
       - PUID=0
       - PGID=0
       - TZ=Asia/Kolkata
-      - WEBUI_PORT=8083
+      - WEBUI_PORT=8081
       - TORRENTING_PORT=6881
     volumes:
-      - /mnt/drive/qbittorrent/appdata:/config
-      - /mnt/drive:/downloads
+      - /ctnr/data/qbittorrent:/config
+      - /mnt:/downloads
     ports:
-      - 8083:8083
+      - 8081:8081
       - 6881:6881
       - 6881:6881/udp
     restart: always
-    networks:
-      - traefik
-
-networks:
-  traefik:
-    external: true
