@@ -34,6 +34,8 @@ Web servers also contains there configuration files along with `docker-compose` 
 - [Immich](https://immich.app/docs/install/docker-compose)
 - [NFS-Server](https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/)
 
+# DEPRECATED SETUP
+
 #### Machines
 | Hostname  | Purpose                          | Operating System  | Type       |
 |-----------|----------------------------------|-------------------|------------|

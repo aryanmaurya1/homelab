@@ -1,3 +1,5 @@
+# DEPRECATED SETUP
+
 # Homelab Stacks
 - I prefer [Podman](https://podman.io) over Docker.
 - All services are only accessible within the local network that is why I didn't enable TLS for them.
