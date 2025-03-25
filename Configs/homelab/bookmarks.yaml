@@ -1,0 +1,39 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/bookmarks
+
+- Search Engine:
+    - Duck Duck Go:
+        - abbr: DDG
+          href: https://duck.com/
+          icon: duckduckgo.png
+    - Brave:
+        - abbr: BS
+          href: https://search.brave.com/
+          icon: brave.png
+    - Google:
+        - abbr: GGL
+          href: https://google.com/
+          icon: google.png
+
+- Developer:
+    - Github:
+        - abbr: GH
+          href: https://github.com/
+          icon: github.png
+
+- Social:
+    - Reddit:
+        - abbr: RE
+          href: https://reddit.com/
+          icon: reddit.png
+    - fosstodon:
+        - addr: FD
+          href: https://fosstodon.org/explore
+          icon: mastodon.png
+
+- Entertainment:
+    - YouTube:
+        - abbr: YT
+          href: https://youtube.com/
+          icon: youtube.png

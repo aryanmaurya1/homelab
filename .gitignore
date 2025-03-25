@@ -2,3 +2,5 @@
 **/config/**
 **/venv/**
 credentials
+note.txt
+services.yaml

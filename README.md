@@ -34,6 +34,10 @@ Web servers also contains there configuration files along with `docker-compose` 
 - [Immich](https://immich.app/docs/install/docker-compose)
 - [NFS-Server](https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/)
 
+## Configs
+- [Bridge Interface](Configs/bridge_interface.conf)
+- [Homepage Config](Configs/homelab/)
+
 # DEPRECATED SETUP
 
 #### Machines
@@ -55,5 +59,3 @@ Web servers also contains there configuration files along with `docker-compose` 
 | portainer_agent | portainer_agent   | 0.0.0.0:9001, :::9001                    | 9001/tcp                            | ✅     |
 
 
-## Configs
-- [Bridge Interface](Configs/bridge_interface.conf)

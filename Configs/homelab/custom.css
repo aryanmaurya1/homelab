@@ -1,0 +1,34 @@
+div.service-name{
+    font-size: medium;
+    font-weight: 800;
+}
+
+p.service-description {
+    font-size: medium;
+    font-family: monospace;
+    font-weight: 800;
+}
+
+div.bookmark-name {
+    font-size: medium;
+}
+
+div.bookmark-description {
+    font-size: medium;
+    font-weight: 800;
+    font-family: monospace;
+}
+
+div.service-block div {
+    font-size: medium;
+    font-family: monospace;
+    font-weight: 400;
+}
+
+li.service {
+    border-radius: 4px;
+}
+
+div button h2 {
+    font-weight: 800;
+}
