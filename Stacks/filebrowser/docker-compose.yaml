@@ -11,7 +11,7 @@ services:
       - PUID=0
       - PGID=0
     volumes:
-      - /ctnr/data:/srv
+      - /:/srv
       - /ctnr/data/filebrowser:/database
       - /ctnr/data/filebrowser:/config
     restart: always

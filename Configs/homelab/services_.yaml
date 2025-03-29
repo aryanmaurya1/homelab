@@ -67,32 +67,32 @@
             description: ctnr.pve.red:8083
             icon: discord.png
 
-- dev.red:
+- ctnr.dve.red:
     - Management:
         - File Browser:
-            href: http://dve.red:8082/login?redirect=/files/
-            description: dve.red:8082
+            href: http://ctnr.dve.red:8080/login?redirect=/files/
+            description: ctnr.dve.red:8080
             icon: filebrowser.png
     - Media:
         - Jellyfin:
-            href: http://dve.red:8080/
-            description: dve.red:8080
+            href: http://ctnr.dve.red:8081/
+            description: ctnr.dve.red:8081
             icon: jellyfin.png
     - Internet:
         - Firefox:
-            href: https://dve.red:8083/
-            description: dve.red:8083
+            href: https://ctnr.dve.red:8082/
+            description: ctnr.dve.red:8082
             icon: firefox.png
         - Qbittorrent:
-            href: http://dve.red:8081/
-            description: dve.red:8081
+            href: http://ctnr.dve.red:8083/
+            description: ctnr.dve.red:8083
             icon: qbittorrent.png
     - Data Transfer:
-        - NFS Server:
-            href:
-            description: "Host: dve.red, Port: 2049, Share: /"
-            icon: webkit.png
         - FTP Server:
             href:
-            description: "Host: dve.red, Port: 8095/8096"
+            description: "Host: ctnr.dve.red, Port: 8084/8085"
+            icon: webkit.png
+        - NFS Server:
+            href:
+            description: "Host: ctnr.dve.red, Port: 2049, Share: /"
             icon: webkit.png
