@@ -10,15 +10,6 @@
                 username:
                 password:
                 node: red
-        - Debian:
-            href:
-            description: "dve.red"
-            icon: debian-linux.png
-            widget:
-                type: portainer
-                url: https://ctnr.pve.red:443
-                env: 4
-                key:
     - Networking:
         - Router:
             href: http://192.168.0.1/admin/index.html#/home

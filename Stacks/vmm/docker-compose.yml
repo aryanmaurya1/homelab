@@ -3,7 +3,7 @@ services:
     image: mber5/virt-manager:latest
     restart: always
     ports:
-      - 8088:80
+      - 8084:80
     hostname: vmm
     container_name: vmm
     environment:
