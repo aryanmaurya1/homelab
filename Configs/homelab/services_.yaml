@@ -96,3 +96,10 @@
             href:
             description: "Host: ctnr.dve.red, Port: 2049, Share: /"
             icon: webkit.png
+
+- Kubernetes:
+    - Management:
+        - Longhorn:
+            href: "http://longhorn.master.red/#/dashboard"
+            description: "longhorn.master.red"
+            icon: longhorn.png
