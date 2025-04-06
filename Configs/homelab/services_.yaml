@@ -103,3 +103,7 @@
             href: "http://longhorn.master.red/#/dashboard"
             description: "longhorn.master.red"
             icon: longhorn.png
+        - Headlamp:
+            href: "http://headlamp.master.red"
+            description: "headlamp.master.red"
+            icon: kubernetes-dashboard.png
