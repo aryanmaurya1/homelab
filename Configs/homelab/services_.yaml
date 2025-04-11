@@ -96,6 +96,10 @@
             href:
             description: "Host: ctnr.dve.red, Port: 2049, Share: /"
             icon: webkit.png
+        - Filezilla:
+            href: http://ctnr.dve.red:8086/
+            description: ctnr.dve.red:8086
+            icon: filezilla.png
 
 - Kubernetes:
     - Management:
@@ -107,3 +111,8 @@
             href: "http://headlamp.master.red"
             description: "headlamp.master.red"
             icon: kubernetes-dashboard.png
+    - Deployments:
+        - Miniflux:
+            href: "http://miniflux.master.red"
+            description: "miniflux.master.red"
+            icon: miniflux.png
