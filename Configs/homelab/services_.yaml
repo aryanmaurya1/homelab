@@ -43,15 +43,6 @@
             icon: code-server.png
 
 - ctnr.pve.red:
-    - Browsers:
-        - Firefox:
-            href: https://ctnr.pve.red:8081/
-            description: ctnr.pve.red:8081
-            icon: firefox.png
-        - Librewolf:
-            href: http://ctnr.pve.red:8082/
-            description: ctnr.pve.red:8082
-            icon: librewolf.png
     - Management:
         - Portainer:
             href: https://ctnr.pve.red/
@@ -61,11 +52,11 @@
             href: http://ctnr.pve.red:8080
             description: ctnr.pve.red:8080
             icon: filebrowser.png
-    - Chat:
-        - Webcord:
-            href: http://ctnr.pve.red:8083/
-            description: ctnr.pve.red:8083
-            icon: discord.png
+    - Browsers:
+        - Firefox:
+            href: https://ctnr.pve.red:8081/
+            description: ctnr.pve.red:8081
+            icon: firefox.png
 
 - ctnr.dve.red:
     - Management:
