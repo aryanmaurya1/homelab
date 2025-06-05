@@ -4,12 +4,10 @@
             href: https://pve.red:8006/
             description: pve.red
             icon: proxmox.png
-            widget:
-                type: proxmox
-                url: https://pve.red:8006/
-                username:
-                password:
-                node: red
+        - Proxmox:
+            href: https://dve.red:8006/
+            description: dve.red
+            icon: proxmox.png
     - Networking:
         - Router:
             href: http://192.168.0.1/admin/index.html#/home
@@ -19,29 +17,23 @@
 - Services:
     - DNS:
         - Adgaurd:
-            href: http://dns-02.pve.red/
+            href: http://dns-02.pve.red/admin/
             description: dns-02.pve.red
-            icon: adguard-home.png
-            widget:
-                type: adguard
-                url:  http://dns-02.pve.red
-                username:
-                password:
+            icon: pi-hole.png
         - Pihole:
             href: http://dns-01.pve.red/admin/
             description: dns-01.pve.red
             icon: pi-hole.png
-            widget:
-                type: pihole
-                url: http://dns-01.pve.red
-                version: 6
-                key:
     - Development:
         - Codeserver:
             href: http://codeserver.pve.red/?folder=/root/homelab
             description: codeserver.pve.red
             icon: code-server.png
-
+    - Home Media:
+        - Immich:
+            href: http://immich.pve.red
+            description: immich.pve.red
+            icon: immich.png
 - ctnr.pve.red:
     - Management:
         - Portainer:
@@ -91,19 +83,3 @@
             href: http://ctnr.dve.red:8086/
             description: ctnr.dve.red:8086
             icon: filezilla.png
-
-- Kubernetes:
-    - Management:
-        - Longhorn:
-            href: "http://longhorn.master.red/#/dashboard"
-            description: "longhorn.master.red"
-            icon: longhorn.png
-        - Headlamp:
-            href: "http://headlamp.master.red"
-            description: "headlamp.master.red"
-            icon: kubernetes-dashboard.png
-    - Deployments:
-        - Miniflux:
-            href: "http://miniflux.master.red"
-            description: "miniflux.master.red"
-            icon: miniflux.png
