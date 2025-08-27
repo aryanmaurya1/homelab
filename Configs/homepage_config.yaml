@@ -1,0 +1,197 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: homepage
+  name: homepage
+  namespace: ctnr
+data:
+  bookmarks.yaml: |
+    - Search Engine:
+        - Duck Duck Go:
+            - abbr: DDG
+              href: https://duck.com/
+              icon: duckduckgo.png
+        - Brave:
+            - abbr: BS
+              href: https://search.brave.com/
+              icon: brave.png
+        - Google:
+            - abbr: GGL
+              href: https://google.com/
+              icon: google.png
+
+    - Developer:
+        - Github:
+            - abbr: GH
+              href: https://github.com/
+              icon: github.png
+
+    - Social:
+        - Reddit:
+            - abbr: RE
+              href: https://reddit.com/
+              icon: reddit.png
+        - fosstodon:
+            - addr: FD
+              href: https://fosstodon.org/explore
+              icon: mastodon.png
+
+    - Entertainment:
+        - YouTube:
+            - abbr: YT
+              href: https://youtube.com/
+              icon: youtube.png
+  custom.css: |
+    div#information-widgets {
+      font-size: medium;
+      font-family: monospace;
+      font-weight: 800;
+    }
+
+    div.service-name{
+      font-size: medium;
+      font-weight: 800;
+    }
+
+    p.service-description {
+      font-size: medium;
+      font-family: monospace;
+      font-weight: 800;
+    }
+
+    div.bookmark-name {
+      font-size: medium;
+    }
+
+    div.bookmark-description {
+      font-size: medium;
+      font-weight: 800;
+      font-family: monospace;
+    }
+
+    div.service-block div {
+      font-size: medium;
+      font-family: monospace;
+      font-weight: 400;
+    }
+
+    li.service {
+      border-radius: 4px;
+    }
+
+    div button h2 {
+      font-weight: 800;
+    }
+  custom.js: ""
+  docker.yaml: ""
+  kubernetes.yaml: |
+    mode: cluster
+  services.yaml: |
+    - Cluster Management:
+        - Tools:
+          - Headlamp:
+              href: "http://headlamp.pve.red"
+              description: "headlamp.pve.red"
+              icon: kubernetes-dashboard.png
+          - Longhorn:
+              href: "http://longhorn.pve.red/#/dashboard"
+              description: "longhorn.pve.red"
+              icon: longhorn.png
+          - Kubevirt Manager:
+              href: "http://master.pve.red:32508"
+              description: "master.pve.red:32508"
+              icon: ovirt.png
+    - Infrastructure:
+        - Bare Metal:
+            - Master-01:
+                href: ""
+                description: "hostname: web"
+                icon: kubernetes-dashboard.png
+            - Master-02:
+                href: ""
+                description: "hostname: deb"
+                icon: kubernetes-dashboard.png
+        - Networking:
+            - Router:
+                href: http://192.168.0.1/admin/index.html#/home
+                description: dlinkrouter.local
+                icon: router.png
+        - DNS:
+            - Pihole-01:
+                href: http://dns-01.pve.red/admin/
+                description: dns-01.pve.red
+                icon: pi-hole.png
+    - Services:
+        - Home Media:
+          - Immich:
+              href: http://immich.pve.red
+              description: immich.pve.red
+              icon: immich.png
+              namespace: immich
+              app: server
+          - Jellyfin:
+              href: http://master.pve.red:30872/
+              description: master.pve.red:30872
+              icon: jellyfin.png
+        - Internet:
+          - Firefox:
+              href: https://master.pve.red:31556/
+              description: master.pve.red:31556
+              icon: firefox.png
+          - Qbittorrent:
+              href: http://master.pve.red:30082/
+              description: master.pve.red:30082
+              icon: qbittorrent.png
+        - Development:
+          - Codeserver:
+              href: http://dev.pve.red/?folder=/root
+              description: dev.pve.red
+              icon: code-server.png
+    - Storage:
+      - Browsers:
+          - File Browser:
+              href: http://master.pve.red:30379
+              description: master.pve.red:30379
+              icon: filebrowser.png
+          - Filezilla:
+              href: http://master.pve.red:8086/
+              description: master.pve.red:8086
+              icon: filezilla.png
+      - Data Transfer:
+          # - FTP Server:
+          #     href:
+          #     description: "Host: master.pve.red, Port: 8084/8085"
+          #     icon: webkit.png
+          - NFS Server:
+              href:
+              description: "Host: master.pve.red, Share: /mnt"
+              icon: webkit.png
+  settings.yaml: |
+    title: Aryan's Homepage
+    cardBlur: none
+    headerStyle: clean
+    disableCollapse: true
+    disableAutodiscovery: true
+  widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: false
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "cluster"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          expanded: true
+    # - resources:
+    #     show: false
+    #     backend: resources
+    #     expanded: false
+    #     cpu: true
+    #     memory: true
+    #     network: default
+    #     disk: /
