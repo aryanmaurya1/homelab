@@ -93,7 +93,7 @@ data:
           - Headlamp:
               href: "http://headlamp.pve.red"
               description: "headlamp.pve.red"
-              icon: kubernetes-dashboard.png
+              icon: buddy.png
           - Longhorn:
               href: "http://longhorn.pve.red/#/dashboard"
               description: "longhorn.pve.red"
@@ -101,17 +101,21 @@ data:
           - Kubevirt Manager:
               href: "http://master.pve.red:32508"
               description: "master.pve.red:32508"
-              icon: ovirt.png
+              icon: duo.png
+          - Trilio:
+              href: "http://master.pve.red:32680"
+              description: "master.pve.red:32680"
+              icon: cup.png
     - Infrastructure:
         - Bare Metal:
             - Master-01:
                 href: ""
-                description: "hostname: web"
-                icon: kubernetes-dashboard.png
+                description: "hostname: web [192.168.0.113]"
+                icon: atuin.png
             - Master-02:
                 href: ""
-                description: "hostname: deb"
-                icon: kubernetes-dashboard.png
+                description: "hostname: deb [192.168.0.101]"
+                icon: atuin.png
         - Networking:
             - Router:
                 href: http://192.168.0.1/admin/index.html#/home

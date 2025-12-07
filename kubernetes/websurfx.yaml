@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: websurfx
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: websurfx-config
+  namespace: websurfx
+data:
+  config.lua: |
+    -- ### General ###
+    logging = true
+    debug = false
+    threads = 8
+
+    -- ### Server ###
+    port = "8080"
+    binding_ip = "0.0.0.0"
+    production_use = false
+    request_timeout = 30
+    rate_limiter = {
+      number_of_requests = 20,
+      time_limit = 3,
+    }
+
+    -- ### Search ###
+    safe_search = 2
+
+    -- ### Website ###
+    colorscheme = "catppuccin-mocha"
+    theme = "simple"
+
+    -- ### Caching ###
+    redis_url = "redis://localhost:6379"
+
+    -- ### Search Engines ###
+    upstream_search_engines = {
+      DuckDuckGo = true,
+      Searx = false,
+    }
+
+  allowlist.txt: |
+
+  blocklist.txt: |
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websurfx
+  namespace: websurfx
+  labels:
+    app: websurfx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websurfx
+  template:
+    metadata:
+      labels:
+        app: websurfx
+    spec:
+      containers:
+        - name: websurfx
+          image: neonmmd/websurfx:nocache
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: websurfx-config
+              mountPath: /etc/xdg/websurfx/
+      volumes:
+        - name: websurfx-config
+          configMap:
+            name: websurfx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websurfx
+  namespace: websurfx
+  labels:
+    app: websurfx
+spec:
+  selector:
+    app: websurfx
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
