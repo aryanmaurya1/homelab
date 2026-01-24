@@ -55,7 +55,9 @@ Manifests and scripts for K3s cluster management.
 | [`rancher_deploy.sh`](kubernetes/rancher_deploy.sh) | Automated Rancher + cert-manager installation |
 | [`nfs_storage_class.yaml`](kubernetes/nfs_storage_class.yaml) | NFS CSI StorageClass configuration |
 | [`websurfx.yaml`](kubernetes/websurfx.yaml) | WebSurfX search engine deployment |
-| [`manifests/kafka.yaml`](kubernetes/manifests/kafka.yaml) | Apache Kafka deployment |
+| [`manifests/kafka.yaml`](kubernetes/manifests/kafka.yaml) | Apache Kafka (Strimzi) cluster deployment |
+| [`manifests/garage_s3.yaml`](kubernetes/manifests/garage_s3.yaml) | Garage S3-compatible distributed storage |
+| [`manifests/puppy_linux_vm.yaml`](kubernetes/manifests/puppy_linux_vm.yaml) | KubeVirt VM with Puppy Linux ISO |
 
 ### Key Components
 
@@ -133,6 +135,7 @@ Setup guides and documentation for common tasks.
 | Note | Description |
 |------|-------------|
 | [`alpine_linux_docker_install.md`](notes/alpine_linux_docker_install.md) | Docker setup on Alpine Linux |
+| [`autossh_setup.md`](notes/autossh_setup.md) | Persistent reverse SSH tunnel with systemd autostart |
 | [`linux_kernel_compilation.md`](notes/linux_kernel_compilation.md) | Custom kernel compilation guide |
 | [`new_k3s_node_&_cluster_setup.md`](notes/new_k3s_node_%26_cluster_setup.md) | Complete K3s HA cluster setup guide |
 

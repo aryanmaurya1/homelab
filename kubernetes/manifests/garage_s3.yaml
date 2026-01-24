@@ -1,0 +1,145 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: garage
+  namespace: garage
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: garaged
+  namespace: garage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garage
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: garage
+    spec:
+      volumes:
+        - name: garage-config
+          configMap:
+            name: garage-config
+            defaultMode: 420
+        - name: garage-data
+          persistentVolumeClaim:
+            claimName: garage-data
+        - name: garage-metadata
+          persistentVolumeClaim:
+            claimName: garage-metadata
+      containers:
+        - name: garage
+          image: dxflrs/garage:v2.1.0
+          ports:
+            - name: s3
+              containerPort: 3900
+              protocol: TCP
+            - name: rpc
+              containerPort: 3901
+              protocol: TCP
+            - name: web
+              containerPort: 3902
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: garage-config
+              mountPath: /etc/garage.toml
+              subPath: garage.toml
+            - name: garage-data
+              mountPath: /var/lib/garage/data
+            - name: garage-metadata
+              mountPath: /var/lib/garage/meta
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: garage-config
+  namespace: garage
+data:
+  garage.toml: >
+    metadata_dir = "/var/lib/garage/meta"
+
+    data_dir = "/var/lib/garage/data"
+
+    db_engine = "lmdb"
+
+    metadata_auto_snapshot_interval = "6h"
+
+
+    replication_factor = 1
+
+
+    compression_level = 2
+
+
+    rpc_bind_addr = "[::]:3901"
+
+    rpc_public_addr = "0.0.0.0:3901"
+
+    rpc_secret =
+    "1fe4bdb195b2277e99e7833940698c0403cb6fe4aa372bc9d674aa1687ea8945"
+
+
+    [s3_api]
+
+    s3_region = "garage"
+
+    api_bind_addr = "[::]:3900"
+
+    root_domain = ".s3.garage"
+
+
+    [s3_web]
+
+    bind_addr = "[::]:3902"
+
+    root_domain = ".web.garage"
+
+    index = "index.html"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: garage-data
+  namespace: garage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Gi
+  storageClassName: longhorn
+  volumeMode: Filesystem
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: garage-metadata
+  namespace: garage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: longhorn
+  volumeMode: Filesystem

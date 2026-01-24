@@ -1,0 +1,116 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: box
+  namespace: virt
+  labels:
+    kubevirt.io/domain: box
+spec:
+  running: true
+  instancetype:
+    kind: VirtualMachineClusterInstancetype
+    name: u1.2xmedium
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: box
+        k8s.v1.cni.cncf.io/networks: macvlan-dhcp
+    spec:
+      architecture: amd64
+      evictionStrategy: LiveMigrate
+      priorityClassName: vm-preemptible
+      domain:
+        machine:
+          type: q35
+        firmware:
+          bootloader:
+            bios: {}
+        devices:
+          networkInterfaceMultiqueue: true
+          interfaces:
+            - name: net0
+              bridge: {}
+          disks:
+            # --- OS DISK (install target) ---
+            - name: rootdisk
+              disk:
+                bus: virtio
+              bootOrder: 2
+
+            # --- INSTALLER ISO ---
+            - name: installer
+              cdrom:
+                bus: sata
+              bootOrder: 1
+
+            # --- CLOUD INIT ---
+            - name: cloudinit
+              disk:
+                bus: virtio
+      networks:
+        - name: net0
+          multus:
+            networkName: virt/macvlan-dhcp
+      volumes:
+        # Writable OS disk
+        - name: rootdisk
+          dataVolume:
+            name: virt-box-rootdisk
+
+        # Puppy Linux ISO
+        - name: installer
+          dataVolume:
+            name: virt-box-installer
+
+        # Cloud-init
+        - name: cloudinit
+          cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              hostname: box
+              ssh_pwauth: true
+            networkData: |
+              version: 1
+              config:
+                - type: physical
+                  name: enp1s0
+                  subnets:
+                    - type: dhcp
+                - type: nameserver
+                  address:
+                    - 8.8.8.8
+                    - 8.8.4.4
+---
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: virt-box-rootdisk
+  namespace: virt
+spec:
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 32Gi
+    storageClassName: longhorn
+  source:
+    blank: {}
+---
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: virt-box-installer
+  namespace: virt
+spec:
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 2Gi
+    storageClassName: longhorn
+  source:
+    http:
+      url: https://onboardcloud.dl.sourceforge.net/project/pb-gh-releases/TrixiePup64Wayland_release/TrixiePup64-Wayland-2601-260103.iso
+      # url: https://excellmedia.dl.sourceforge.net/project/bodhilinux/7.0.0/bodhi-7.0.0-64.iso?viasf=1
