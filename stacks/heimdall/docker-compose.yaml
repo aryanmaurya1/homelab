@@ -1,21 +1,25 @@
-version: "3.8"
+# Heimdall - Application dashboard
+# https://github.com/linuxserver/Heimdall
+#
+# Ports: 80, 443, 8080 -> 80
+
 services:
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
-    hostname: heimdall
     container_name: heimdall
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Kolkata
-    networks:
-      - traefik
-    volumes:
-      - /root/container/Stacks/heimdall/data:/config
+    hostname: heimdall
     ports:
       - 80:80
       - 443:443
       - 8080:80
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /root/container/Stacks/heimdall/data:/config
+    networks:
+      - traefik
     restart: always
 
 networks:

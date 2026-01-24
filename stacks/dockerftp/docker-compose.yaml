@@ -1,15 +1,20 @@
-version: '3.8'
+# DockerFTP - Simple FTP server
+# https://github.com/garethflowers/docker-ftp-server
+#
+# Ports: 8095 -> 20 (data), 8096 -> 21 (control)
+# Default credentials: admin / admin
+
 services:
   ftp-server:
+    image: garethflowers/ftp-server
     container_name: dockerftp
+    hostname: dockerftp
+    ports:
+      - 8095:20
+      - 8096:21
     environment:
       - FTP_USER=admin
       - FTP_PASS=admin
-    image: garethflowers/ftp-server
-    ports:
-      - "8095:20"
-      - "8096:21"
     volumes:
       - /mnt:/home/admin
     restart: always
-    hostname: dockerftp

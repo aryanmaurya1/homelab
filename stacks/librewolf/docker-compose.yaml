@@ -1,7 +1,16 @@
+# Librewolf - Privacy-focused browser in container
+# https://github.com/linuxserver/docker-librewolf
+#
+# Port: 8082 -> 3000 (Web UI)
+# Default credentials: admin / admin
+
 services:
   librewolf:
     image: lscr.io/linuxserver/librewolf:latest
     container_name: librewolf
+    hostname: librewolf
+    ports:
+      - 8082:3000
     environment:
       - PUID=1000
       - PGID=1000
@@ -13,7 +22,5 @@ services:
       - NO_DECOR=true
     volumes:
       - /ctnr/data:/config
-    ports:
-      - 8082:3000
-    shm_size: "1gb"
+    shm_size: 1gb
     restart: always

@@ -1,8 +1,18 @@
-version: "3.8"
+# qBittorrent - Torrent client
+# https://github.com/qbittorrent/qBittorrent
+#
+# Ports: 8081 (Web UI), 6881 (BitTorrent)
+# Default credentials: admin / adminadmin (change on first login)
+
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    hostname: qbittorrent
+    ports:
+      - 8081:8081
+      - 6881:6881
+      - 6881:6881/udp
     environment:
       - PUID=0
       - PGID=0
@@ -12,8 +22,4 @@ services:
     volumes:
       - /ctnr/data/qbittorrent:/config
       - /mnt:/downloads
-    ports:
-      - 8081:8081
-      - 6881:6881
-      - 6881:6881/udp
     restart: always

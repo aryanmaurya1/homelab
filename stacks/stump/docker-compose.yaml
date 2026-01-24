@@ -1,17 +1,20 @@
-version: '3.8'
+# Stump - Comics server
+# https://github.com/stumpapp/stump
+#
+# Port: 8091 -> 10801
 
 services:
   stump:
     image: aaronleopold/stump:latest
     container_name: stump
     hostname: stump
-    volumes:
-      - /root/container/stump/data:/config
-      - /mnt/drive/books:/data
-    restart: always
     ports:
       - 8091:10801
     environment:
       - PUID=0
       - PGID=0
       - STUMP_CONFIG_DIR=/config
+    volumes:
+      - /root/container/stump/data:/config
+      - /mnt/drive/books:/data
+    restart: always

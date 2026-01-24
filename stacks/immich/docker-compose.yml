@@ -1,55 +1,62 @@
+# Immich - Self-hosted photo and video management
+# https://github.com/immich-app/immich
+#
+# Ports: 80, 443 -> 2283
+# Requires: .env file with UPLOAD_LOCATION, DB_PASSWORD, DB_USERNAME, DB_DATABASE_NAME, DB_DATA_LOCATION
+
 name: immich
 
 services:
   immich-server:
-    container_name: immich_server
     image: ghcr.io/immich-app/immich-server:release
-    volumes:
-      - ${UPLOAD_LOCATION}:/usr/src/app/upload
-      - /etc/localtime:/etc/localtime:ro
+    container_name: immich_server
+    ports:
+      - 80:2283
+      - 443:2283
     environment:
-      - UPLOAD_LOCATION=${UPLOAD_LOCATION}
       - TZ=Asia/Calcutta
       - IMMICH_VERSION=release
+      - UPLOAD_LOCATION=${UPLOAD_LOCATION}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_USERNAME=${DB_USERNAME}
       - DB_DATABASE_NAME=${DB_DATABASE_NAME}
-    ports:
-      - '80:2283'
-      - '443:2283'
+    volumes:
+      - ${UPLOAD_LOCATION}:/usr/src/app/upload
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - redis
       - database
-    restart: always
     healthcheck:
       disable: false
+    restart: always
 
+  # Optional: Machine learning for face recognition and smart search
   # immich-machine-learning:
-  #   container_name: immich_machine_learning
   #   image: ghcr.io/immich-app/immich-machine-learning:release
-  #   volumes:
-  #     - model-cache:/cache
+  #   container_name: immich_machine_learning
   #   environment:
-  #     - UPLOAD_LOCATION=${UPLOAD_LOCATION}
   #     - TZ=Asia/Calcutta
   #     - IMMICH_VERSION=release
+  #     - UPLOAD_LOCATION=${UPLOAD_LOCATION}
   #     - DB_PASSWORD=${DB_PASSWORD}
   #     - DB_USERNAME=${DB_USERNAME}
   #     - DB_DATABASE_NAME=${DB_DATABASE_NAME}
-  #   restart: always
+  #   volumes:
+  #     - model-cache:/cache
   #   healthcheck:
   #     disable: false
+  #   restart: always
 
   redis:
-    container_name: immich_redis
     image: docker.io/redis:6.2-alpine@sha256:905c4ee67b8e0aa955331960d2aa745781e6bd89afc44a8584bfd13bc890f0ae
+    container_name: immich_redis
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
 
   database:
-    container_name: immich_postgres
     image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    container_name: immich_postgres
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres

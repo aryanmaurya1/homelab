@@ -1,9 +1,14 @@
+# Nginx Proxy Manager - Reverse proxy with web UI
+# https://nginxproxymanager.com/
+#
+# Ports: 80 (HTTP), 443 (HTTPS), 8080 -> 81 (Admin UI)
+# Default credentials: admin@example.com / changeme
+
 services:
   app:
-    image: 'jc21/nginx-proxy-manager:latest'
-    hostname: nginxpm
+    image: jc21/nginx-proxy-manager:latest
     container_name: nginxpm
-    restart: always
+    hostname: nginxpm
     ports:
       - 80:80
       - 443:443
@@ -13,6 +18,7 @@ services:
       - nginx-proxy-manager:/etc/letsencrypt
     networks:
       - traefik
+    restart: always
 
 volumes:
   nginx-proxy-manager:

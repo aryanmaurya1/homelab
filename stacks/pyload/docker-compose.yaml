@@ -1,8 +1,15 @@
-version: "3.8"
+# pyLoad-NG - Download manager
+# https://github.com/pyload/pyload
+#
+# Port: 8085 -> 8000
+
 services:
   pyload-ng:
     image: lscr.io/linuxserver/pyload-ng:latest
     container_name: pyload-ng
+    hostname: pyload-ng
+    ports:
+      - 8085:8000
     environment:
       - PUID=0
       - PGID=0
@@ -10,11 +17,9 @@ services:
     volumes:
       - /mnt/drive/pyload:/config
       - /mnt/drive:/downloads
-    ports:
-      - 8085:8000
-    restart: always
     networks:
       - traefik
+    restart: always
 
 networks:
   traefik:

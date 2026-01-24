@@ -1,9 +1,15 @@
-version: '3.8'
+# Kavita - Digital library for eBooks, comics, and manga
+# https://github.com/Kareadita/Kavita
+#
+# Port: 8093 -> 5000
+
 services:
   kavita:
     image: lscr.io/linuxserver/kavita:latest
     container_name: kavita
     hostname: kavita
+    ports:
+      - 8093:5000
     environment:
       - PUID=0
       - PGID=0
@@ -11,11 +17,9 @@ services:
     volumes:
       - /root/container/Stacks/kavita/data:/config
       - /mnt/drive/books:/data
-    ports:
-      - 8093:5000
-    restart: always
     networks:
       - traefik
+    restart: always
 
 networks:
   traefik:

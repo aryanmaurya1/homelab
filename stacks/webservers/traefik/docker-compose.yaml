@@ -1,8 +1,14 @@
-version: "3.8"
+# Traefik - Cloud-native reverse proxy and load balancer
+# https://traefik.io/
+#
+# Ports: 80 (HTTP), 443 (HTTPS), 8080 (Dashboard)
+# Configured for Podman socket
+
 services:
   traefik:
     image: docker.io/traefik:v3.1
     container_name: traefik
+    hostname: traefik
     user: root
     ports:
       - 80:80
@@ -12,9 +18,9 @@ services:
       - /var/run/podman/podman.sock:/var/run/docker.sock
       - /root/container/traefik/config:/etc/traefik
       - /root/logs:/root/logs
-    restart: always
     networks:
       - traefik
+    restart: always
 
 networks:
   traefik:

@@ -1,8 +1,16 @@
-version: "3.8"
+# Jellyfin - Media streaming server
+# https://jellyfin.org/
+#
+# Port: 8096
+# Hardware acceleration: /dev/dri passed through
+
 services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
+    hostname: jellyfin
+    ports:
+      - 8096:8096
     environment:
       - PUID=0
       - PGID=0
@@ -10,9 +18,6 @@ services:
     volumes:
       - /ctnr/data/jellyfin:/config
       - /mnt:/data
-    ports:
-      - 8096:8096
-    restart: always
     devices:
       - /dev/dri:/dev/dri
-    hostname: jellyfin
+    restart: always

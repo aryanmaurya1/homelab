@@ -1,13 +1,19 @@
-version: "3.8"
+# NFS Server - Network file sharing
+# https://github.com/sjiveson/nfs-server-alpine
+#
+# Port: 2049
+# Requires: privileged mode
+
 services:
   nfs:
     image: itsthenetwork/nfs-server-alpine:12
     container_name: nfs-server
-    restart: always
+    hostname: nfs-server
     privileged: true
+    ports:
+      - 2049:2049
     environment:
       - SHARED_DIRECTORY=/data
     volumes:
       - /mnt:/data
-    ports:
-      - 2049:2049
+    restart: always

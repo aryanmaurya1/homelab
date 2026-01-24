@@ -1,10 +1,15 @@
-version: "3.8"
+# Portainer - Container management UI
+# https://portainer.io/
+#
+# Port: 8081 -> 9000
+# Configured for Podman socket
+
 services:
   portainer:
     image: docker.io/portainer/portainer-ee:2.21.3
     container_name: portainer
+    hostname: portainer
     command: --http-enabled
-    restart: always
     ports:
       - 8081:9000
     volumes:
@@ -12,6 +17,7 @@ services:
       - portainer_data:/data
     networks:
       - traefik
+    restart: always
 
 volumes:
   portainer_data:

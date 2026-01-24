@@ -1,34 +1,47 @@
+# Nextcloud - Self-hosted cloud storage
+# https://nextcloud.com/
+#
+# Port: 80
+# Default credentials: admin / admin
+# Stack includes: MariaDB, Redis
+
 services:
   db:
     image: mariadb:10.11
-    restart: always
+    container_name: nextcloud_db
+    hostname: nextcloud_db
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
-    volumes:
-      - /mnt/mariadb:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=admin
       - MYSQL_PASSWORD=admin
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+    volumes:
+      - /mnt/mariadb:/var/lib/mysql
+    restart: always
 
   redis:
     image: redis:alpine
+    container_name: nextcloud_redis
+    hostname: nextcloud_redis
     restart: always
 
   app:
     image: nextcloud
-    restart: always
+    container_name: nextcloud
+    hostname: nextcloud
     ports:
       - 80:80
-    depends_on:
-      - redis
-      - db
-    volumes:
-      - /mnt/nextcloud:/var/www/html
     environment:
-      - MYSQL_PASSWORD=admin
+      - MYSQL_HOST=db
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_HOST=db
+      - MYSQL_PASSWORD=admin
       - NEXTCLOUD_ADMIN_USER=admin
       - NEXTCLOUD_ADMIN_PASSWORD=admin
+    volumes:
+      - /mnt/nextcloud:/var/www/html
+    depends_on:
+      - db
+      - redis
+    restart: always
