@@ -1,0 +1,5 @@
+{
+    "192.168.0.101": "ubuntu-server-vmi",
+    "192.168.0.102": "centos-server-vmi",
+    "192.168.0.103": "windows-server-vmi"
+}

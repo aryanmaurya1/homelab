@@ -2,12 +2,10 @@
 
 import subprocess
 import time
+import json
 
-VM_MAP = {
-    "192.168.0.xxx": "***************",
-    "192.168.0.xxx": "***************",
-    "192.168.0.xxx": "***************",
-}
+with open("mapping.json", "r") as f:
+    VM_MAP = json.load(f)
 
 NAMESPACE = "virt"
 
