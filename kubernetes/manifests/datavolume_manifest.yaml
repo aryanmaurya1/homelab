@@ -1,0 +1,38 @@
+# https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: debian-12-dv
+  namespace: virt
+spec:
+  source:
+    http:
+      url: https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+    volumeMode: Filesystem
+    storageClassName: longhorn
+---
+# quay.io/triliodata/filerecovery:5.1.0
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: filerecovery-dv
+  namespace: trilio-system
+spec:
+  source:
+    registry:
+      url: docker://quay.io/triliodata/filerecovery:5.1.0
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 30Gi
+    volumeMode: Filesystem
+    storageClassName: longhorn
+---
