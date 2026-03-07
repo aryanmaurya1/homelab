@@ -16,23 +16,3 @@ spec:
         storage: 10Gi
     volumeMode: Filesystem
     storageClassName: longhorn
----
-# quay.io/triliodata/filerecovery:5.1.0
-apiVersion: cdi.kubevirt.io/v1beta1
-kind: DataVolume
-metadata:
-  name: filerecovery-dv
-  namespace: trilio-system
-spec:
-  source:
-    registry:
-      url: docker://quay.io/triliodata/filerecovery:5.1.0
-  pvc:
-    accessModes:
-      - ReadWriteOnce
-    resources:
-      requests:
-        storage: 30Gi
-    volumeMode: Filesystem
-    storageClassName: longhorn
----

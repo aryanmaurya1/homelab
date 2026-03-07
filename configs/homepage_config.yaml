@@ -140,8 +140,8 @@ data:
               icon: jellyfin.png
         - Internet:
           - Firefox:
-              href: https://master.pve.red:31556/
-              description: master.pve.red:31556
+              href: https://master.pve.red:30792/
+              description: master.pve.red:30792
               icon: firefox.png
           - Qbittorrent:
               href: http://master.pve.red:30082/

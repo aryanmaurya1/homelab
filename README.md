@@ -8,9 +8,9 @@ A comprehensive collection of homelab configurations, deployment stacks, Kuberne
 
 ```
 homelab/
-├── configs/           # Configuration files for various services
+├── configs/           # Configuration files for networking and dashboards
 ├── images/            # Custom Docker images
-├── kubernetes/        # Kubernetes manifests and deployment scripts
+├── kubernetes/        # Kubernetes manifests and storage configuration
 ├── notes/             # Documentation and setup guides
 ├── scripts/           # Utility and automation scripts
 └── stacks/            # Docker/Podman compose files for services
@@ -48,16 +48,26 @@ Docker Compose files for self-hosted services. Podman is preferred over Docker. 
 
 ## ☸️ [Kubernetes](kubernetes/)
 
-Manifests and scripts for K3s cluster management.
+Manifests for K3s cluster workloads and storage configuration.
 
 | File | Purpose |
 |------|---------|
-| [`rancher_deploy.sh`](kubernetes/rancher_deploy.sh) | Automated Rancher + cert-manager installation |
 | [`nfs_storage_class.yaml`](kubernetes/nfs_storage_class.yaml) | NFS CSI StorageClass configuration |
-| [`websurfx.yaml`](kubernetes/websurfx.yaml) | WebSurfX search engine deployment |
-| [`manifests/kafka.yaml`](kubernetes/manifests/kafka.yaml) | Apache Kafka (Strimzi) cluster deployment |
-| [`manifests/garage_s3.yaml`](kubernetes/manifests/garage_s3.yaml) | Garage S3-compatible distributed storage |
-| [`manifests/puppy_linux_vm.yaml`](kubernetes/manifests/puppy_linux_vm.yaml) | KubeVirt VM with Puppy Linux ISO |
+
+### [Application Manifests](kubernetes/application_manifests/)
+
+Kubernetes deployments, VMs, and data resources.
+
+| Manifest | Purpose |
+|----------|---------|
+| [`brave_browser.yaml`](kubernetes/application_manifests/brave_browser.yaml) | Brave browser deployment (linuxserver) with Longhorn PVC |
+| [`firefox_browser.yaml`](kubernetes/application_manifests/firefox_browser.yaml) | Firefox browser deployment (linuxserver) with Longhorn PVC |
+| [`websurfx.yaml`](kubernetes/application_manifests/websurfx.yaml) | WebSurfX search engine deployment |
+| [`kafka.yaml`](kubernetes/application_manifests/kafka.yaml) | Apache Kafka (Strimzi) cluster deployment |
+| [`garage_s3.yaml`](kubernetes/application_manifests/garage_s3.yaml) | Garage S3-compatible distributed storage |
+| [`puppy_linux_vm.yaml`](kubernetes/application_manifests/puppy_linux_vm.yaml) | KubeVirt VM with Puppy Linux ISO |
+| [`sample_mini_vm.yaml`](kubernetes/application_manifests/sample_mini_vm.yaml) | Minimal KubeVirt VM template |
+| [`debian_12_datavolume.yaml`](kubernetes/application_manifests/debian_12_datavolume.yaml) | CDI DataVolume importing Debian 12 cloud image |
 
 ### Key Components
 
@@ -75,6 +85,7 @@ Utility scripts for system administration and automation.
 | Script | Description |
 |--------|-------------|
 | [`alpine_docker_install.sh`](scripts/alpine_docker_install.sh) | Docker installation on Alpine Linux |
+| [`rancher_deploy.sh`](scripts/rancher_deploy.sh) | Automated Rancher + cert-manager installation via Helm |
 | [`mount_qcow2.sh`](scripts/mount_qcow2.sh) | Mount QCOW2 disk images |
 | [`mount_encrypted_qcow2.sh`](scripts/mount_encrypted_qcow2.sh) | Mount LUKS-encrypted QCOW2 images |
 | [`screen_recorder.sh`](scripts/screen_recorder.sh) | Screen recording utility |
@@ -91,19 +102,11 @@ Configuration files for network and application setup.
 | Config | Purpose |
 |--------|---------|
 | [`bridge_interface.conf`](configs/bridge_interface.conf) | Bridge networking configuration |
-| [`homepage_config.yaml`](configs/homepage_config.yaml) | Homepage dashboard ConfigMap |
-| [`homelab/`](configs/homelab/) | Homepage service configuration files |
+| [`homepage_config.yaml`](configs/homepage_config.yaml) | Homepage dashboard Kubernetes ConfigMap |
 
 ### Homepage Dashboard
 
-Complete configuration for the [Homepage](https://gethomepage.dev/) dashboard including:
-- [`services_.yaml`](configs/homelab/services_.yaml) - Service definitions
-- [`widgets.yaml`](configs/homelab/widgets.yaml) - Kubernetes cluster widgets
-- [`bookmarks.yaml`](configs/homelab/bookmarks.yaml) - Quick links
-- [`custom.css`](configs/homelab/custom.css) - UI customizations
-- [`settings.yaml`](configs/homelab/settings.yaml) - Dashboard settings
-- [`docker.yaml`](configs/homelab/docker.yaml) - Docker integration
-- [`kubernetes.yaml`](configs/homelab/kubernetes.yaml) - Kubernetes integration
+A single Kubernetes ConfigMap ([`homepage_config.yaml`](configs/homepage_config.yaml)) containing all [Homepage](https://gethomepage.dev/) dashboard configuration: services, bookmarks, widgets, custom CSS, Kubernetes integration, and settings. Deployed to the `ctnr` namespace.
 
 ---
 
