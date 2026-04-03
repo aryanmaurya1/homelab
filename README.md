@@ -60,14 +60,14 @@ Kubernetes deployments, VMs, and data resources.
 
 | Manifest | Purpose |
 |----------|---------|
-| [`brave_browser.yaml`](kubernetes/application_manifests/brave_browser.yaml) | Brave browser deployment (linuxserver) with Longhorn PVC |
-| [`firefox_browser.yaml`](kubernetes/application_manifests/firefox_browser.yaml) | Firefox browser deployment (linuxserver) with Longhorn PVC |
-| [`websurfx.yaml`](kubernetes/application_manifests/websurfx.yaml) | WebSurfX search engine deployment |
-| [`kafka.yaml`](kubernetes/application_manifests/kafka.yaml) | Apache Kafka (Strimzi) cluster deployment |
-| [`garage_s3.yaml`](kubernetes/application_manifests/garage_s3.yaml) | Garage S3-compatible distributed storage |
-| [`puppy_linux_vm.yaml`](kubernetes/application_manifests/puppy_linux_vm.yaml) | KubeVirt VM with Puppy Linux ISO |
-| [`sample_mini_vm.yaml`](kubernetes/application_manifests/sample_mini_vm.yaml) | Minimal KubeVirt VM template |
-| [`debian_12_datavolume.yaml`](kubernetes/application_manifests/debian_12_datavolume.yaml) | CDI DataVolume importing Debian 12 cloud image |
+| [`firefox.yaml`](kubernetes/application_manifests/firefox.yaml) | LinuxServer Firefox; Longhorn `/config`; Service ports **3000** / **3001** (NodePort) |
+| [`jellyfin.yaml`](kubernetes/application_manifests/jellyfin.yaml) | LinuxServer Jellyfin; Longhorn `/config`, NFS PVC `/data`; Service **8096** (NodePort) |
+| [`qbittorrent.yaml`](kubernetes/application_manifests/qbittorrent.yaml) | LinuxServer qBittorrent; Longhorn `/config`, NFS PVC `/downloads`; **8080** Web UI + **6881** TCP/UDP (NodePort) |
+| [`filebrowser.yaml`](kubernetes/application_manifests/filebrowser.yaml) | [`filebrowser/filebrowser:s6`](https://hub.docker.com/r/filebrowser/filebrowser) (LinuxServer-style **PUID**/**PGID**); Longhorn `/config` + `/database`, NFS PVC `/srv`; Service **80** (NodePort) |
+
+### [Random / experimental manifests](kubernetes/random_manifests/)
+
+Older or scratch manifests kept for reference (KubeVirt samples, Kafka, Garage, browsers, WebSurfX, etc.). Not the primary path for the media stack above.
 
 ### Key Components
 
@@ -162,7 +162,7 @@ Setup guides and documentation for common tasks.
 ├─────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
 │  │  Master-01  │  │  Master-02  │  │   Pihole    │      │
-│  │   (web)     │  │   (deb)     │  │   (DNS)     │      │
+│  │   (uno)     │  │   (duo)     │  │   (DNS)     │      │
 │  │ .113        │  │ .101        │  │             │      │
 │  └─────────────┘  └─────────────┘  └─────────────┘      │
 │         │               │                               │

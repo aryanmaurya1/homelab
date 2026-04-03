@@ -19,6 +19,7 @@ iface br0 inet dhcp
     bridge_fd 0
     bridge_maxwait 0
 ```
+**Replace interface name above with correct ethernet interface.**
 
 ## Mounting External HDDs
 
@@ -92,7 +93,7 @@ Longhorn can encrypt volumes with LUKS; the kernel needs the `dm_crypt` device-m
 4. **After reboot** — append `dm_crypt` to `/etc/modules` (one line per module) so it loads at boot:
 
    ```shell
-   grep -qxF dm_crypt /etc/modules || echo dm_crypt | sudo tee -a /etc/modules
+   grep -qxF dm_crypt /etc/modules || echo dm_crypt | tee -a /etc/modules
    ```
 
 ## Install MariaDB
@@ -220,6 +221,8 @@ helm install longhorn longhorn/longhorn \
   --set persistence.defaultClassReplicaCount=1 \
   --debug
 ```
+
+- [Sample Backup Target Setup](https://longhorn.io/docs/1.11.1/snapshots-and-backups/backup-and-restore/set-backup-target/#set-up-a-local-testing-backupstore)
 
 ## Install VolumeSnapshot Support
 

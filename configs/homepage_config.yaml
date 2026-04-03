@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: homepage
   name: homepage
-  namespace: ctnr
+  namespace: kube-system
 data:
   bookmarks.yaml: |
     - Search Engine:
@@ -85,91 +85,92 @@ data:
     }
   custom.js: ""
   docker.yaml: ""
+  proxmox.yaml: ""
   kubernetes.yaml: |
     mode: cluster
   services.yaml: |
     - Cluster Management:
         - Tools:
           - Headlamp:
-              href: "http://headlamp.pve.red"
-              description: "headlamp.pve.red"
+              href: "http://uno.lab.local:30677"
+              description: "uno.lab.local:30677"
               icon: buddy.png
           - Longhorn:
-              href: "http://longhorn.pve.red/#/dashboard"
-              description: "longhorn.pve.red"
+              href: "http://uno.lab.local:31044"
+              description: "uno.lab.local:31044"
               icon: longhorn.png
-          - Kubevirt Manager:
-              href: "http://master.pve.red:32508"
-              description: "master.pve.red:32508"
+          - Kubevirt:
+              href: "http://uno.lab.local:30867"
+              description: "uno.lab.local:30867"
               icon: duo.png
           - Trilio:
-              href: "http://master.pve.red:32680"
-              description: "master.pve.red:32680"
+              href: "http://duo.lab.local:30215/"
+              description: "duo.lab.local:30215"
               icon: cup.png
     - Infrastructure:
         - Bare Metal:
             - Master-01:
                 href: ""
-                description: "hostname: web [192.168.0.113]"
+                description: "hostname: uno [192.168.0.137]"
                 icon: atuin.png
             - Master-02:
                 href: ""
-                description: "hostname: deb [192.168.0.101]"
+                description: "hostname: duo [192.168.0.101]"
                 icon: atuin.png
         - Networking:
             - Router:
-                href: http://192.168.0.1/admin/index.html#/home
+                href: http://dlinkrouter.local/admin/index.html#/home
                 description: dlinkrouter.local
                 icon: router.png
         - DNS:
             - Pihole-01:
-                href: http://dns-01.pve.red/admin/
-                description: dns-01.pve.red
+                href: http://dns.lab.local/admin/
+                description: dns.lab.local
                 icon: pi-hole.png
     - Services:
         - Home Media:
           - Immich:
-              href: http://immich.pve.red
-              description: immich.pve.red
+              href: http://immich.lab.local
+              description: immich.lab.local
               icon: immich.png
               namespace: immich
               app: server
           - Jellyfin:
-              href: http://master.pve.red:30872/
-              description: master.pve.red:30872
+              href: http://uno.lab.local:32033/
+              description: uno.lab.local:32033
               icon: jellyfin.png
         - Internet:
           - Firefox:
-              href: https://master.pve.red:30792/
-              description: master.pve.red:30792
+              href: https://uno.lab.local:30285/
+              description: uno.lab.local:30285
               icon: firefox.png
           - Qbittorrent:
-              href: http://master.pve.red:30082/
-              description: master.pve.red:30082
+              href: http://uno.lab.local:30568/
+              description: uno.lab.local:30568
               icon: qbittorrent.png
         - Development:
           - Codeserver:
-              href: http://dev.pve.red/?folder=/root
-              description: dev.pve.red
+              href: http://dev.lab.local/?folder=/root
+              description: dev.lab.local
               icon: code-server.png
     - Storage:
       - Browsers:
           - File Browser:
-              href: http://master.pve.red:30379
-              description: master.pve.red:30379
+              href: http://uno.lab.local:31949
+              description: uno.lab.local:31949
               icon: filebrowser.png
           - Filezilla:
-              href: http://master.pve.red:8086/
-              description: master.pve.red:8086
+              href: http://uno.lab.local:8086/
+              description: uno.lab.local:8086
               icon: filezilla.png
       - Data Transfer:
           # - FTP Server:
           #     href:
-          #     description: "Host: master.pve.red, Port: 8084/8085"
+          #     description: "Host: uno.lab.local, Port: 8084/8085"
           #     icon: webkit.png
           - NFS Server:
               href:
-              description: "Host: master.pve.red, Share: /mnt"
+              description: "Host: uno.lab.local, Share: /mnt"
               icon: webkit.png
   settings.yaml: |
     title: Aryan's Homepage
