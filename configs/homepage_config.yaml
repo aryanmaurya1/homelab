@@ -7,196 +7,541 @@ metadata:
   namespace: kube-system
 data:
   bookmarks.yaml: |
-    - Search Engine:
-        - Duck Duck Go:
+    - Bookmarks:
+        - Homepage:
+            - abbr: HP
+              href: http://home.lab.local/
+              icon: mdi-rocket-launch
+              description: home.lab.local
+        - Headlamp:
+            - abbr: HL
+              href: http://uno.lab.local:30677/
+              icon: mdi-lighthouse-on
+              description: uno.lab.local:30677
+        - Longhorn:
+            - abbr: LH
+              href: http://uno.lab.local:31044/
+              icon: mdi-cow
+              description: uno.lab.local:31044
+        - Awesome Self-Hosted:
+            - abbr: AS
+              href: https://github.com/awesome-selfhosted/awesome-selfhosted
+              icon: mdi-treasure-chest
+              description: github.com/awesome-selfhosted/awesome-selfhosted
+        - selfh.st:
+            - abbr: SH
+              href: https://selfh.st/
+              icon: mdi-satellite-uplink
+              description: selfh.st
+        - LinuxServer.io:
+            - abbr: LS
+              href: https://www.linuxserver.io/
+              icon: mdi-penguin
+              description: linuxserver.io
+        - Homepage docs:
+            - abbr: HD
+              href: https://gethomepage.dev/
+              icon: mdi-book-cog
+              description: gethomepage.dev
+        - r/selfhosted:
+            - abbr: RS
+              href: https://www.reddit.com/r/selfhosted/
+              icon: mdi-alien
+              description: reddit.com/r/selfhosted
+        - r/homelab:
+            - abbr: RH
+              href: https://www.reddit.com/r/homelab/
+              icon: mdi-garage-open-variant
+              description: reddit.com/r/homelab
+        - KubeVirt:
+            - abbr: KV
+              href: https://kubevirt.io/
+              icon: mdi-television-classic
+              description: kubevirt.io
+        - DuckDuckGo:
             - abbr: DDG
               href: https://duck.com/
-              icon: duckduckgo.png
-        - Brave:
-            - abbr: BS
+              icon: mdi-duck
+              description: duck.com
+        - Brave Search:
+            - abbr: BR
               href: https://search.brave.com/
-              icon: brave.png
-        - Google:
-            - abbr: GGL
-              href: https://google.com/
-              icon: google.png
-
-    - Developer:
-        - Github:
+              icon: mdi-shield-crown
+              description: search.brave.com
+        - GitHub:
             - abbr: GH
               href: https://github.com/
-              icon: github.png
-
-    - Social:
-        - Reddit:
-            - abbr: RE
-              href: https://reddit.com/
-              icon: reddit.png
-        - fosstodon:
-            - addr: FD
-              href: https://fosstodon.org/explore
-              icon: mastodon.png
-
-    - Entertainment:
+              icon: mdi-github
+              description: github.com
+        - Kubernetes docs:
+            - abbr: K8s
+              href: https://kubernetes.io/docs/
+              icon: mdi-hexagon-multiple
+              description: kubernetes.io/docs
         - YouTube:
             - abbr: YT
               href: https://youtube.com/
-              icon: youtube.png
+              icon: mdi-popcorn
+              description: youtube.com
+
   custom.css: |
-    div#information-widgets {
-      font-size: medium;
-      font-family: monospace;
-      font-weight: 800;
+    /* --- Ambient background: soft drifting color (glass reads better on non-flat bg) --- */
+    @keyframes homelab-mesh-shift {
+      0%, 100% { opacity: 1; transform: scale(1) translate(0, 0); }
+      33% { opacity: 0.85; transform: scale(1.05) translate(1%, -1%); }
+      66% { opacity: 0.9; transform: scale(1.02) translate(-1%, 1%); }
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 100% 80% at 10% 0%, rgba(56, 189, 248, 0.12), transparent 55%),
+        radial-gradient(ellipse 80% 60% at 95% 20%, rgba(168, 85, 247, 0.1), transparent 50%),
+        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(34, 211, 238, 0.08), transparent 45%);
+      animation: homelab-mesh-shift 18s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body::before { animation: none; }
     }
 
-    div.service-name{
-      font-size: medium;
-      font-weight: 800;
+    /* --- Layout: tighter page gutters --- */
+    #layout-groups,
+    #bookmarks {
+      margin-left: 1rem !important;
+      margin-right: 1rem !important;
+      margin-top: 1rem !important;
+      max-width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    @media (min-width: 640px) {
+      #layout-groups,
+      #bookmarks {
+        margin-left: 1.25rem !important;
+        margin-right: 1.25rem !important;
+      }
     }
 
-    p.service-description {
-      font-size: medium;
-      font-family: monospace;
-      font-weight: 800;
+    /* Overview: 2×2 grid */
+    #layout-groups > .services-group:first-of-type ul.services-list + div {
+      width: 100% !important;
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      column-gap: 0.75rem !important;
+      row-gap: 0.75rem !important;
+      align-items: start;
+      justify-items: stretch;
     }
 
-    div.bookmark-name {
-      font-size: medium;
+    #layout-groups .services-group.subgroup {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box;
     }
 
-    div.bookmark-description {
-      font-size: medium;
-      font-weight: 800;
-      font-family: monospace;
+    #layout-groups .services-group .grid {
+      column-gap: 0.75rem !important;
+      row-gap: 0.75rem !important;
     }
 
-    div.service-block div {
-      font-size: medium;
-      font-family: monospace;
-      font-weight: 400;
+    ul.services-list {
+      width: 100% !important;
     }
-
+    ul.services-list.grid {
+      align-items: stretch;
+    }
     li.service {
-      border-radius: 4px;
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
 
-    div button h2 {
-      font-weight: 800;
+    /* --- Glassmorphism: service & bookmark cards --- */
+    .service-card,
+    .bookmark-card {
+      position: relative;
+      border-radius: 1rem !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box;
+      min-height: 5.5rem;
+      overflow: hidden;
+      isolation: isolate;
+      background: rgba(15, 23, 42, 0.35) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.25),
+        0 1px 0 rgba(255, 255, 255, 0.06) inset,
+        0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+      transition:
+        transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1),
+        box-shadow 0.28s ease,
+        border-color 0.28s ease,
+        background 0.28s ease;
     }
+    @supports ((-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px))) {
+      .service-card,
+      .bookmark-card {
+        -webkit-backdrop-filter: blur(14px) saturate(1.35);
+        backdrop-filter: blur(14px) saturate(1.35);
+        background: rgba(30, 41, 59, 0.4) !important;
+      }
+    }
+    /* Specular highlight edge */
+    .service-card::after,
+    .bookmark-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.14) 0%,
+        transparent 42%,
+        transparent 58%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
+      opacity: 0.55;
+      z-index: 1;
+    }
+    .service-card > *,
+    .bookmark-card > * {
+      position: relative;
+      z-index: 2;
+    }
+    .service-card:hover,
+    .bookmark-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      border-color: rgba(56, 189, 248, 0.35) !important;
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.35),
+        0 0 28px rgba(56, 189, 248, 0.12),
+        0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .service-card,
+      .bookmark-card {
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .service-card:hover,
+      .bookmark-card:hover {
+        transform: none;
+      }
+    }
+
+    /* Top widget strip: frosted bar */
+    #widgets-wrap {
+      position: relative;
+      z-index: 1;
+      padding: 0.5rem 0.75rem !important;
+      margin-left: 0.5rem !important;
+      margin-right: 0.5rem !important;
+      border-radius: 1rem !important;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.25) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+    @supports ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
+      #widgets-wrap {
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+        backdrop-filter: blur(16px) saturate(1.2);
+      }
+    }
+
+    /* Section headers: glass chip + gradient title */
+    .service-group-icon,
+    .bookmark-group-icon {
+      margin-right: 0.65rem !important;
+      filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.25));
+      transition: filter 0.25s ease, transform 0.25s ease;
+    }
+    div button:hover .service-group-icon,
+    div button:hover .bookmark-group-icon {
+      filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.35));
+      transform: scale(1.05);
+    }
+    div button h2.service-group-name,
+    div button h2.bookmark-group-name {
+      font-weight: 800 !important;
+      letter-spacing: 0.02em;
+      background: linear-gradient(110deg, #e2e8f0 0%, #7dd3fc 45%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #information-widgets {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+    .widget-title {
+      letter-spacing: 0.02em;
+      font-weight: 800 !important;
+    }
+
+    .service-name {
+      letter-spacing: 0.02em;
+      font-weight: 800 !important;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+    }
+    p.service-description {
+      opacity: 0.92;
+      font-weight: 700 !important;
+      line-height: 1.35;
+    }
+    .bookmark-name,
+    .bookmark-description {
+      font-weight: 800 !important;
+    }
+    .service-block,
+    .service-block div {
+      font-weight: 700;
+    }
+    li.service a {
+      font-weight: 800 !important;
+    }
+
+    /* Bookmarks row */
+    #bookmarks {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.75rem 1rem !important;
+      align-items: flex-start;
+    }
+    #bookmarks .bookmark-group {
+      flex: 1 1 280px !important;
+      min-width: min(100%, 260px) !important;
+      max-width: 100% !important;
+      padding: 0.35rem 0.5rem !important;
+      border-radius: 1rem !important;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(15, 23, 42, 0.2) !important;
+    }
+    @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+      #bookmarks .bookmark-group {
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+      }
+    }
+    #bookmarks .bookmark-group .grid {
+      column-gap: 0.5rem !important;
+      row-gap: 0.5rem !important;
+    }
+
   custom.js: ""
   docker.yaml: ""
   proxmox.yaml: ""
   kubernetes.yaml: |
     mode: cluster
+    ingress: true
+    traefik: true
   services.yaml: |
-    - Cluster Management:
+    - Overview:
         - Tools:
-          - Headlamp:
-              href: "http://uno.lab.local:30677"
-              description: "uno.lab.local:30677"
-              icon: buddy.png
-          - Longhorn:
-              href: "http://uno.lab.local:31044"
-              description: "uno.lab.local:31044"
-              icon: longhorn.png
-          - Kubevirt-Manager:
-              href: "http://uno.lab.local:30465"
-              description: "uno.lab.local:30465"
-              icon: duo.png
-          - Trilio:
-              href: "http://duo.lab.local:30215/"
-              description: "duo.lab.local:30215"
-              icon: cup.png
-    - Infrastructure:
-        - Bare Metal:
-            - Master-01:
-                href: ""
-                description: "hostname: uno [192.168.0.137]"
-                icon: atuin.png
-            - Master-02:
-                href: ""
-                description: "hostname: duo [192.168.0.101]"
-                icon: atuin.png
-        - Networking:
-            - Router:
-                href: http://dlinkrouter.local/admin/index.html#/home
-                description: dlinkrouter.local
-                icon: router.png
-        - DNS:
-            - Pihole-01:
-                href: http://dns.lab.local/admin/
-                description: dns.lab.local
-                icon: pi-hole.png
-    - Services:
-        - Home Media:
-          - Immich:
-              href: http://immich.lab.local
-              description: immich.lab.local
-              icon: immich.png
-              namespace: immich
-              app: server
-          - Jellyfin:
-              href: http://uno.lab.local:32033/
-              description: uno.lab.local:32033
-              icon: jellyfin.png
-        - Internet:
-          - Firefox:
-              href: https://uno.lab.local:30285/
-              description: uno.lab.local:30285
-              icon: firefox.png
-          - Qbittorrent:
-              href: http://uno.lab.local:30568/
-              description: uno.lab.local:30568
-              icon: qbittorrent.png
-        - Development:
-          - Codeserver:
-              href: http://dev.lab.local/?folder=/root
-              description: dev.lab.local
-              icon: code-server.png
-    - Storage:
-      - Browsers:
-          - File Browser:
-              href: http://uno.lab.local:31949
-              description: uno.lab.local:31949
-              icon: filebrowser.png
-          - Filezilla:
-              href: http://uno.lab.local:8086/
-              description: uno.lab.local:8086
-              icon: filezilla.png
-      - Data Transfer:
-          # - FTP Server:
-          #     href:
-          #     description: "Host: uno.lab.local, Port: 8084/8085"
-          #     icon: webkit.png
-          - NFS Server:
-              href:
-              description: "Host: uno.lab.local, Share: /mnt"
-              icon: webkit.png
+            - Headlamp:
+                href: http://uno.lab.local:30677/
+                description: uno.lab.local:30677
+                icon: mdi-telescope
+                siteMonitor: http://uno.lab.local:30677/
+            - Longhorn:
+                href: http://uno.lab.local:31044/
+                description: uno.lab.local:31044
+                icon: mdi-cow
+                siteMonitor: http://uno.lab.local:31044/
+            - KubeVirt Manager:
+                href: http://uno.lab.local:30465/
+                description: uno.lab.local:30465
+                icon: mdi-virtual-reality
+                siteMonitor: http://uno.lab.local:30465/
+            - Trilio:
+                href: http://duo.lab.local:30215/
+                description: duo.lab.local:30215
+                icon: mdi-parachute
+                siteMonitor: http://duo.lab.local:30215/
+
+        - Infrastructure:
+            - Control plane:
+                - Master-01 (uno):
+                    href: ""
+                    description: "hostname: uno [192.168.0.137]"
+                    icon: mdi-numeric-1-circle
+                - Master-02 (duo):
+                    href: ""
+                    description: "hostname: duo [192.168.0.101]"
+                    icon: mdi-numeric-2-circle
+            - Network:
+                - Router:
+                    href: http://dlinkrouter.local/admin/index.html#/home
+                    description: dlinkrouter.local
+                    icon: mdi-router-wireless-settings
+                    siteMonitor: http://dlinkrouter.local/
+                - Pi-hole:
+                    href: http://dns.lab.local/admin/
+                    description: dns.lab.local
+                    icon: mdi-magnet-on
+                    siteMonitor: http://dns.lab.local/admin/
+
+        - Media & apps:
+            - Video & photos:
+                - Immich:
+                    href: http://immich.lab.local/
+                    description: immich.lab.local
+                    icon: mdi-camera-party-mode
+                    namespace: immich
+                    app: server
+                    siteMonitor: http://immich.lab.local/
+                - Jellyfin:
+                    href: http://uno.lab.local:32033/
+                    description: uno.lab.local:32033
+                    icon: mdi-movie-open-star
+                    namespace: ctnr
+                    podSelector: app in (jellyfin)
+                    siteMonitor: http://uno.lab.local:32033/
+            - Downloads & remote:
+                - qBittorrent:
+                    href: http://uno.lab.local:30568/
+                    description: uno.lab.local:30568
+                    icon: mdi-ship-wheel
+                    namespace: ctnr
+                    podSelector: app in (qbittorrent)
+                    siteMonitor: http://uno.lab.local:30568/
+                - Firefox:
+                    href: https://uno.lab.local:30285/
+                    description: uno.lab.local:30285
+                    icon: mdi-fire
+                    namespace: ctnr
+                    podSelector: app in (firefox)
+                    siteMonitor: https://uno.lab.local:30285/
+            - Dev:
+                - code-server:
+                    href: http://dev.lab.local/?folder=/root
+                    description: dev.lab.local
+                    icon: mdi-code-braces-box
+                    siteMonitor: http://dev.lab.local/
+
+        - Files & storage:
+            - File tools:
+                - File Browser:
+                    href: http://uno.lab.local:31949/
+                    description: uno.lab.local:31949
+                    icon: mdi-folder-cog
+                    namespace: ctnr
+                    podSelector: app in (filebrowser)
+                    siteMonitor: http://uno.lab.local:31949/
+                - FileZilla:
+                    href: http://uno.lab.local:8086/
+                    description: uno.lab.local:8086
+                    icon: mdi-shark
+                    siteMonitor: http://uno.lab.local:8086/
+            - Data:
+                - NFS share:
+                    href: ""
+                    description: "Host: uno.lab.local, Share: /mnt"
+                    icon: mdi-sheep
+
   settings.yaml: |
-    title: Aryan's Homepage
-    cardBlur: none
-    headerStyle: clean
+    title: Homelab
+    description: K3s · media · storage — quick links & cluster glance
+    theme: dark
+    color: slate
+    headerStyle: boxedWidgets
+    cardBlur: sm
+    fullWidth: true
+    iconStyle: theme
+    useEqualHeights: true
     disableCollapse: true
     disableAutodiscovery: true
+    language: en
+    target: _blank
+    quicklaunch:
+      searchDescriptions: true
+      showSearchSuggestions: true
+      provider: duckduckgo
+    # Longhorn widget + providers.longhorn: add when UI credentials are configured (see https://gethomepage.dev/widgets/info/longhorn/)
+    layout:
+      Overview:
+        style: row
+        columns: 2
+        icon: mdi-creation
+        Tools:
+          style: row
+          columns: 2
+          icon: mdi-hammer-wrench
+        Infrastructure:
+          style: row
+          columns: 2
+          icon: mdi-bridge
+          Control plane:
+            style: row
+            columns: 2
+          Network:
+            style: row
+            columns: 2
+        Media & apps:
+          style: row
+          columns: 3
+          icon: mdi-theater
+          Video & photos:
+            style: row
+            columns: 2
+          Downloads & remote:
+            style: row
+            columns: 2
+          Dev:
+            style: row
+            columns: 1
+        Files & storage:
+          style: row
+          columns: 2
+          icon: mdi-archive-cog
+          File tools:
+            style: row
+            columns: 2
+          Data:
+            style: row
+            columns: 1
+      Bookmarks:
+        style: row
+        columns: 3
+        icon: mdi-book-open-variant
+
   widgets.yaml: |
+    - greeting:
+        text_size: 2xl
+        text: Homelab
+    - datetime:
+        text_size: xl
+        locale: en-IN
+        format:
+          dateStyle: full
+          timeStyle: short
+          hour12: true
     - kubernetes:
         cluster:
-          show: false
+          show: true
           cpu: true
           memory: true
           showLabel: true
-          label: "cluster"
+          label: Cluster
         nodes:
           show: true
           cpu: true
           memory: true
           showLabel: true
           expanded: true
-    # - resources:
-    #     show: false
-    #     backend: resources
-    #     expanded: false
-    #     cpu: true
-    #     memory: true
-    #     network: default
-    #     disk: /
+    - openmeteo:
+        label: Weather
+        latitude: 22.5726
+        longitude: 88.3639
+        timezone: Asia/Kolkata
+        units: metric
+        cache: 15
+    - search:
+        provider: duckduckgo
+        target: _blank
+        showSearchSuggestions: true
