@@ -43,6 +43,8 @@ spec:
               mountPath: /config
             - name: nfs-data
               mountPath: /data
+            - name: in-memory-cache-pvc
+              mountPath: /config/cache/transcodes
       volumes:
         - name: jellyfin-config
           persistentVolumeClaim:
@@ -50,6 +52,10 @@ spec:
         - name: nfs-data
           persistentVolumeClaim:
             claimName: nfs-data-pvc
+        - name: in-memory-cache-pvc
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi
 ---
 apiVersion: v1
 kind: Service

@@ -99,9 +99,9 @@ data:
               href: "http://uno.lab.local:31044"
               description: "uno.lab.local:31044"
               icon: longhorn.png
-          - Kubevirt:
-              href: "http://uno.lab.local:30867"
-              description: "uno.lab.local:30867"
+          - Kubevirt-Manager:
+              href: "http://uno.lab.local:30465"
+              description: "uno.lab.local:30465"
               icon: duo.png
           - Trilio:
               href: "http://duo.lab.local:30215/"
