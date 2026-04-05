@@ -8,6 +8,7 @@ Self-hosted services running via Docker Compose. [Podman](https://podman.io) is 
 - Use [Portainer](portainer/) for container management UI
 - Custom DNS handled by [Pihole](pihole/)
 - Host management via Cockpit (port `9090`)
+- **Host port overlaps:** Several stacks use the same host port (e.g. **8081** for Portainer, qBittorrent, and Firefox; **8080** for Heimdall, Filebrowser, and Pihole’s UI). Adjust `ports:` or run one stack at a time on a shared host.
 
 ---
 
@@ -29,22 +30,22 @@ podman-compose up -d
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
-| Heimdall | [heimdall/](heimdall/) | 8080 | 80, 443 | Application dashboard |
+| Heimdall | [heimdall/](heimdall/) | 80, 443, 8080 | 80, 443 | Application dashboard |
 | Portainer | [portainer/](portainer/) | 8081 | 9000 | Container management UI |
 
 ### 🎬 Media Servers
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
-| Jellyfin | [jellyfin/](jellyfin/) | 8084 | 8096 | Media streaming server |
-| Immich | [immich/](immich/) | 8097 | 2283 | Photo & video management |
+| Jellyfin | [jellyfin/](jellyfin/) | 8096 | 8096 | Media streaming server |
+| Immich | [immich/](immich/) | 80, 443 | 2283 | Photo & video management |
 | Dim | [dim/](dim/) | 8089 | 8000 | Media manager |
 
 ### 📚 Digital Libraries
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
-| Kavita | [kavita/](kavita/) | 8093 | 8080 | eBooks, comics, manga |
+| Kavita | [kavita/](kavita/) | 8093 | 5000 | eBooks, comics, manga |
 | Komga | [komga/](komga/) | 8092 | 25600 | Comics & manga server |
 | Stump | [stump/](stump/) | 8091 | 10801 | Comics server |
 
@@ -52,18 +53,18 @@ podman-compose up -d
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
-| qBittorrent | [qbittorrent/](qbittorrent/) | 8083, 6881 | 8083, 6881 | Torrent client |
+| qBittorrent | [qbittorrent/](qbittorrent/) | 8081, 6881 | 8081, 6881 | Torrent client |
 | Pyload-NG | [pyload/](pyload/) | 8085 | 8000 | Download manager |
-| Prowlarr | [prowlarr/](prowlarr/) | - | - | Indexer manager |
-| Sonarr | [sonarr/](sonarr/) | - | - | TV series manager |
+| Prowlarr | [prowlarr/](prowlarr/) | 8087 | 9696 | Indexer manager |
+| Sonarr | [sonarr/](sonarr/) | 8086 | 8989 | TV series manager |
 
 ### 📁 File Management
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
-| Filebrowser | [filebrowser/](filebrowser/) | 8082 | 80 | Web file manager |
+| Filebrowser | [filebrowser/](filebrowser/) | 8080 | 80 | Web file manager |
 | Filestash | [filestash/](filestash/) | 8090 | 8334 | File manager with integrations |
-| Filezilla | [filezilla/](filezilla/) | 8086 | 5800 | FTP client (web UI) |
+| Filezilla | [filezilla/](filezilla/) | 5800 | 5800 | FTP client (web UI) |
 | DockerFTP | [dockerftp/](dockerftp/) | 8095, 8096 | 20, 21 | FTP server |
 | NFS | [nfs/](nfs/) | 2049 | 2049 | Network file sharing |
 
@@ -71,8 +72,8 @@ podman-compose up -d
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
-| Firefox | [firefox/](firefox/) | 8087 | 5800 | Firefox in container |
-| Librewolf | [librewolf/](librewolf/) | - | - | Privacy-focused browser |
+| Firefox | [firefox/](firefox/) | 8081 | 5800 | Firefox in container |
+| Librewolf | [librewolf/](librewolf/) | 8082 | 3000 | Privacy-focused browser |
 
 ### ☁️ Cloud & Productivity
 
@@ -100,8 +101,8 @@ podman-compose up -d
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
-| VMM | [vmm/](vmm/) | 8088 | 80 | Virtual machine manager |
-| Webcord | [webcord/](webcord/) | - | - | Discord client |
+| VMM | [vmm/](vmm/) | 8084 | 80 | Virtual machine manager |
+| Webcord | [webcord/](webcord/) | 8083 | 3000 | Discord client |
 
 ---
 

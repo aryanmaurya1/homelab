@@ -20,20 +20,22 @@ homelab/
 
 ## 🐳 [Stacks](stacks/)
 
-Docker Compose files for self-hosted services. Podman is preferred over Docker. All services are configured for local network access only (no TLS).
+Docker Compose files for self-hosted services. Podman is preferred over Docker. All services are configured for local network access only (no TLS). More detail: [stacks/README.md](stacks/README.md).
+
+**Host ports:** Values below match each stack’s `docker-compose` file. Several stacks reuse the same host port (for example **8081** for Portainer, qBittorrent Web UI, and Firefox; **8080** for Heimdall and Filebrowser). Only one service can bind a given host port—change mappings or stop conflicting stacks before starting another.
 
 | Service | Port | Description |
 |---------|------|-------------|
-| [**Heimdall**](stacks/heimdall/) | 8080 | Application dashboard |
+| [**Heimdall**](stacks/heimdall/) | 80, 443, 8080→80 | Application dashboard |
 | [**Portainer**](stacks/portainer/) | 8081 | Container management UI |
-| [**Filebrowser**](stacks/filebrowser/) | 8082 | Web-based file manager |
-| [**qBittorrent**](stacks/qbittorrent/) | 8083 | Torrent client |
-| [**Jellyfin**](stacks/jellyfin/) | 8084 | Media server |
+| [**Filebrowser**](stacks/filebrowser/) | 8080 | Web-based file manager |
+| [**qBittorrent**](stacks/qbittorrent/) | 8081 (+ 6881 tcp/udp) | Torrent client |
+| [**Jellyfin**](stacks/jellyfin/) | 8096 | Media server |
 | [**Pyload-NG**](stacks/pyload/) | 8085 | Download manager |
-| [**Filezilla**](stacks/filezilla/) | 8086 | FTP client (web UI) |
-| [**Firefox**](stacks/firefox/) | 8087 | Browser in container |
+| [**Filezilla**](stacks/filezilla/) | 5800 | FTP client (web UI) |
+| [**Firefox**](stacks/firefox/) | 8081 | Browser in container |
 | [**Kavita**](stacks/kavita/) | 8093 | Digital library |
-| [**Immich**](stacks/immich/) | 8097 | Photo management |
+| [**Immich**](stacks/immich/) | 80, 443→2283 | Photo management |
 | [**NFS**](stacks/nfs/) | 2049 | Network file sharing |
 
 ### Additional Services
@@ -64,10 +66,15 @@ Kubernetes deployments, VMs, and data resources.
 | [`jellyfin.yaml`](kubernetes/application_manifests/jellyfin.yaml) | LinuxServer Jellyfin; Longhorn `/config`, NFS PVC `/data`; Service **8096** (NodePort) |
 | [`qbittorrent.yaml`](kubernetes/application_manifests/qbittorrent.yaml) | LinuxServer qBittorrent; Longhorn `/config`, NFS PVC `/downloads`; **8080** Web UI + **6881** TCP/UDP (NodePort) |
 | [`filebrowser.yaml`](kubernetes/application_manifests/filebrowser.yaml) | [`filebrowser/filebrowser:s6`](https://hub.docker.com/r/filebrowser/filebrowser) (LinuxServer-style **PUID**/**PGID**); Longhorn `/config` + `/database`, NFS PVC `/srv`; Service **80** (NodePort) |
+| [`homepage.yaml`](kubernetes/application_manifests/homepage.yaml) | [Homepage](https://gethomepage.dev/) dashboard; `kube-system`; ClusterIP service **3000**; RBAC + embedded config (see also [`configs/homepage_config.yaml`](configs/homepage_config.yaml)) |
+| [`kafka.yaml`](kubernetes/application_manifests/kafka.yaml) | Strimzi **Kafka** (`kafka` namespace); plain listener **9092** (NodePort), TLS **9093** (internal) |
+| [`garage_s3.yaml`](kubernetes/application_manifests/garage_s3.yaml) | [Garage](https://garagehq.deuxfleurs.fr/) S3-compatible storage (`garage` namespace) |
+| [`brave.yaml`](kubernetes/application_manifests/brave.yaml) | LinuxServer Brave browser (`brave` namespace); NodePort **3000** / **3001** |
+| [`websurfx.yaml`](kubernetes/application_manifests/websurfx.yaml) | WebSurfx metasearch (`websurfx` namespace); NodePort **8080** |
 
 ### [Random / experimental manifests](kubernetes/random_manifests/)
 
-Older or scratch manifests kept for reference (KubeVirt samples, Kafka, Garage, browsers, WebSurfX, etc.). Not the primary path for the media stack above.
+KubeVirt- and data-volume–related samples kept for reference: Debian 12 data volume, mini VM, Puppy Linux VM. Not the primary path for the application manifests above. Heavier experiments (Kafka, Garage, browsers, WebSurfX) live under [`application_manifests/`](kubernetes/application_manifests/) instead.
 
 ### Key Components
 
@@ -106,7 +113,7 @@ Configuration files for network and application setup.
 
 ### Homepage Dashboard
 
-A single Kubernetes ConfigMap ([`homepage_config.yaml`](configs/homepage_config.yaml)) containing all [Homepage](https://gethomepage.dev/) dashboard configuration: services, bookmarks, widgets, custom CSS, Kubernetes integration, and settings. Deployed to the `ctnr` namespace.
+A single Kubernetes ConfigMap ([`homepage_config.yaml`](configs/homepage_config.yaml)) containing all [Homepage](https://gethomepage.dev/) dashboard configuration: services, bookmarks, widgets, custom CSS, Kubernetes integration, and settings. The checked-in manifest uses the **`kube-system`** namespace (same as [`homepage.yaml`](kubernetes/application_manifests/homepage.yaml)).
 
 ---
 
@@ -163,7 +170,7 @@ Setup guides and documentation for common tasks.
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
 │  │  Master-01  │  │  Master-02  │  │   Pihole    │      │
 │  │   (uno)     │  │   (duo)     │  │   (DNS)     │      │
-│  │ .113        │  │ .101        │  │             │      │
+│  │ .137        │  │ .184        │  │             │      │
 │  └─────────────┘  └─────────────┘  └─────────────┘      │
 │         │               │                               │
 │         └───────┬───────┘                               │
