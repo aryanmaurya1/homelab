@@ -1,0 +1,130 @@
+# KubeVirt: periodically ping every VirtualMachineInstance (all namespaces).
+# If no reported IP responds to ICMP (10 probes), delete the VMI so the VM can be recreated.
+#
+# Apply: kubectl apply -f kubevirt_vmi_ping_health_cronjob.yaml
+# Adjust namespace below if kube-system is not desired (ServiceAccount + CronJob only).
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubevirt-vmi-ping-health
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kubevirt-vmi-ping-health
+rules:
+  - apiGroups: ["kubevirt.io"]
+    resources: ["virtualmachineinstances"]
+    verbs: ["get", "list", "watch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubevirt-vmi-ping-health
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubevirt-vmi-ping-health
+subjects:
+  - kind: ServiceAccount
+    name: kubevirt-vmi-ping-health
+    namespace: kube-system
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kubevirt-vmi-ping-health
+  namespace: kube-system
+spec:
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      ttlSecondsAfterFinished: 86400
+      template:
+        spec:
+          serviceAccountName: kubevirt-vmi-ping-health
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+          containers:
+            - name: ping-check
+              image: alpine:3.20
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_RAW
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -eu
+                  printf '%s\n' \
+                    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main" \
+                    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community" \
+                    > /etc/apk/repositories
+                  apk update -qq
+                  apk add --no-cache -qq kubectl jq iputils
+
+                  ping_one() {
+                    ip="$1"
+                    case "$ip" in
+                      *:*) ping6 -c 10 -w 30 -q "$ip" ;;
+                      *)   ping -c 10 -w 30 -q "$ip" ;;
+                    esac
+                  }
+
+                  kubectl get virtualmachineinstances.kubevirt.io -A -o json | jq -c '.items[]' | while read -r item; do
+                    ns=$(echo "$item" | jq -r '.metadata.namespace')
+                    name=$(echo "$item" | jq -r '.metadata.name')
+                    phase=$(echo "$item" | jq -r '.status.phase // ""')
+                    if [ "$phase" != "Running" ]; then
+                      echo "skip $ns/$name (phase=$phase)"
+                      continue
+                    fi
+
+                    ips=$(echo "$item" | jq -r '
+                      [
+                        (.status.interfaces // [])[]
+                        | .ipAddress,
+                          .ip,
+                          (.ipAddresses // [])[],
+                          (.ips // [])[]
+                      ]
+                      | map(select(. != null and . != ""))
+                      | unique
+                      | .[]
+                    ')
+
+                    if [ -z "$ips" ]; then
+                      echo "skip $ns/$name (no status IP yet)"
+                      continue
+                    fi
+
+                    ok=false
+                    for ip in $ips; do
+                      if ping_one "$ip"; then
+                        ok=true
+                        echo "ok $ns/$name via $ip"
+                        break
+                      fi
+                    done
+
+                    if [ "$ok" = false ]; then
+                      echo "unresponsive $ns/$name — deleting VMI"
+                      kubectl delete virtualmachineinstances.kubevirt.io "$name" -n "$ns" --wait=false
+                    fi
+                  done
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  memory: 512Mi
