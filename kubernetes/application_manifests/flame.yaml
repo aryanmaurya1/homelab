@@ -1,0 +1,311 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flame
+  namespace: ctnr
+type: Opaque
+stringData:
+  password: admin
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: flame-data-pvc
+  namespace: ctnr
+spec:
+  storageClassName: longhorn
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.25Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flame-seed
+  namespace: ctnr
+  labels:
+    app: flame
+data:
+  seed.sh: |
+    #!/bin/sh
+    # =============================================================================
+    # flame-seed — one-time population of Flame (https://github.com/pawelmalak/flame)
+    # =============================================================================
+    #
+    # Purpose
+    #   Mirrors homelab links from configs/homepage_config.yaml into Flame’s SQLite
+    #   database via the public HTTP API. Flame does not read that file itself; this
+    #   script is the bridge between “source of truth in git” and Flame’s UI data.
+    #
+    # How it runs
+    #   Mounted into the batch Job "flame-seed" (see below in this manifest). The Job
+    #   container installs curl + jq, sets FLAME_PASSWORD from Secret "flame", then
+    #   executes this script.
+    #
+    # API flow (Flame v2)
+    #   1. POST /api/auth/           JSON { password, duration } → JWT in data.token
+    #   2. POST /api/apps           Header Authorization-Flame: Bearer <token>
+    #   3. POST /api/categories     bookmark groups (each name is a subheading under BOOKMARKS)
+    #   4. POST /api/bookmarks      JSON includes categoryId
+    #
+    # Bookmark categories (3)
+    #   Homelab — local stack + self-hosting community (from homepage bookmarks + k8s).
+    #   Web — search, GitHub, YouTube.
+    #   Courses & games — MOOCs and game stores (plus a few common extras).
+    #   Flame prints BOOKMARKS once, then each category name as a subheading — avoid
+    #   naming any category “Bookmarks” or it duplicates the section title.
+    #
+    # Idempotency
+    #   If GET /api/apps already returns any app OR /api/categories any category,
+    #   the script exits 0 without changes. That avoids duplicates on manifest
+    #   re-applies when the PVC already holds data.
+    #
+    # Re-seed from scratch
+    #   Wipe Flame’s data (e.g. delete the PVC or empty /app/data), delete the Job
+    #   "flame-seed" so it can be recreated, then kubectl apply this manifest again.
+    #
+    # Updating entries
+    #   post_app ↔ homepage_config data.services.yaml (href non-empty). post_bm ↔ three
+    #   bookmark groups above; keep in sync with data.bookmarks.yaml where applicable.
+    #   After changing this ConfigMap, delete job/flame-seed and re-apply for a fresh DB.
+    #
+    # Icons
+    #   Flame uses Material Design Icons with dash-case names (no "mdi-" prefix).
+    #   Homepage’s icon: mdi-foo-bar  →  Flame field icon: foo-bar
+    #
+    # Network
+    #   BASE targets the in-cluster Service DNS name; the Job must run in ctnr.
+    #
+    # =============================================================================
+    set -eu
+
+    BASE="http://flame.ctnr.svc.cluster.local:5005"
+
+    # --- Wait for Flame (migrations + HTTP listener) — up to ~3 minutes ---
+    i=0
+    while [ "$i" -lt 90 ]; do
+      if curl -sf "$BASE/" >/dev/null 2>&1; then
+        break
+      fi
+      i=$((i + 1))
+      sleep 2
+    done
+    if ! curl -sf "$BASE/" >/dev/null 2>&1; then
+      echo "Flame did not become ready in time" >&2
+      exit 1
+    fi
+
+    # --- Skip if this instance was already seeded (non-destructive re-runs) ---
+    APPS="$(curl -s "$BASE/api/apps" | jq '.data | length')"
+    CATS="$(curl -s "$BASE/api/categories" | jq '.data | length')"
+    if [ "$APPS" != "0" ] || [ "$CATS" != "0" ]; then
+      echo "Flame already has apps or bookmark categories; skipping seed."
+      exit 0
+    fi
+
+    # --- JWT: must match Secret "flame" key password (see env on Job container) ---
+    AUTH_JSON="$(jq -n --arg p "$FLAME_PASSWORD" --arg d "24h" '{password:$p,duration:$d}')"
+    TOKEN="$(curl -sf -X POST "$BASE/api/auth/" -H "Content-Type: application/json" -d "$AUTH_JSON" | jq -r '.data.token')"
+    if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+      echo "Login failed (check flame secret password)" >&2
+      exit 1
+    fi
+    AUTH="Authorization-Flame: Bearer $TOKEN"
+
+    # post_app <name> <url> <icon> <description>  →  POST /api/apps (JSON body)
+    post_app() {
+      body="$(jq -n --arg n "$1" --arg u "$2" --arg i "$3" --arg d "$4" '{name:$n,url:$u,icon:$i,description:$d}')"
+      curl -sf -X POST "$BASE/api/apps" -H "$AUTH" -H "Content-Type: application/json" -d "$body" >/dev/null
+    }
+
+    # post_bm <name> <url> [<icon>] <categoryId>  →  POST /api/bookmarks
+    post_bm() {
+      if [ -z "${4:-}" ]; then
+        echo "post_bm: fourth argument (category id) is required" >&2
+        exit 1
+      fi
+      body="$(jq -n --arg n "$1" --arg u "$2" --arg i "${3:-bookmark}" --argjson c "$4" '{name:$n,url:$u,icon:$i,categoryId:$c}')"
+      curl -sf -X POST "$BASE/api/bookmarks" -H "$AUTH" -H "Content-Type: application/json" -d "$body" >/dev/null
+    }
+
+    # --- Applications: align with homepage_config.yaml → data.services.yaml (href non-empty) ---
+    post_app "Headlamp" "http://uno.lab.local:30677/" "telescope" "uno.lab.local:30677"
+    post_app "Longhorn" "http://uno.lab.local:31044/" "cow" "uno.lab.local:31044"
+    post_app "KubeVirt Manager" "http://uno.lab.local:30465/" "virtual-reality" "uno.lab.local:30465"
+    post_app "Trilio" "http://duo.lab.local:30215/" "parachute" "duo.lab.local:30215"
+    post_app "Router" "http://dlinkrouter.local/admin/index.html#/home" "router-wireless-settings" "dlinkrouter.local"
+    post_app "Pi-hole" "http://dns.lab.local/admin/" "magnet-on" "dns.lab.local"
+    post_app "Immich" "http://immich.lab.local/" "camera-party-mode" "immich.lab.local"
+    post_app "Jellyfin" "http://uno.lab.local:32033/" "movie-open-star" "uno.lab.local:32033"
+    post_app "qBittorrent" "http://uno.lab.local:30568/" "ship-wheel" "uno.lab.local:30568"
+    post_app "Firefox" "https://uno.lab.local:30285/" "fire" "uno.lab.local:30285"
+    post_app "code-server" "http://dev.lab.local/?folder=/root" "code-braces-box" "dev.lab.local"
+    post_app "File Browser" "http://uno.lab.local:31949/" "folder-cog" "uno.lab.local:31949"
+    # post_app "FileZilla" "http://uno.lab.local:8086/" "shark" "uno.lab.local:8086"
+    # post_app "Homepage" "http://home.lab.local/" "rocket-launch" "home.lab.local"
+    # post_app "Flame" "http://flame.lab.local/" "view-dashboard" "flame.lab.local"
+
+    # --- Bookmark categories (order = column order in Flame) ---
+    CAT_HOMELAB="$(curl -sf -X POST "$BASE/api/categories" -H "$AUTH" -H "Content-Type: application/json" -d '{"name":"Homelab"}' | jq '.data.id')"
+    CAT_WEB="$(curl -sf -X POST "$BASE/api/categories" -H "$AUTH" -H "Content-Type: application/json" -d '{"name":"Web"}' | jq '.data.id')"
+    CAT_LEARN="$(curl -sf -X POST "$BASE/api/categories" -H "$AUTH" -H "Content-Type: application/json" -d '{"name":"Courses & games"}' | jq '.data.id')"
+
+    # Homelab — homepage bookmarks.yaml + k8s / virt docs
+    post_bm "Homepage" "http://home.lab.local/" "rocket-launch" "$CAT_HOMELAB"
+    post_bm "Headlamp" "http://uno.lab.local:30677/" "lighthouse-on" "$CAT_HOMELAB"
+    post_bm "Longhorn" "http://uno.lab.local:31044/" "cow" "$CAT_HOMELAB"
+    post_bm "Awesome Self-Hosted" "https://github.com/awesome-selfhosted/awesome-selfhosted" "treasure-chest" "$CAT_HOMELAB"
+    post_bm "selfh.st" "https://selfh.st/" "satellite-uplink" "$CAT_HOMELAB"
+    post_bm "LinuxServer.io" "https://www.linuxserver.io/" "penguin" "$CAT_HOMELAB"
+    post_bm "Homepage docs" "https://gethomepage.dev/" "book-cog" "$CAT_HOMELAB"
+    post_bm "r/selfhosted" "https://www.reddit.com/r/selfhosted/" "alien" "$CAT_HOMELAB"
+    post_bm "r/homelab" "https://www.reddit.com/r/homelab/" "garage-open-variant" "$CAT_HOMELAB"
+    post_bm "KubeVirt" "https://kubevirt.io/" "television-classic" "$CAT_HOMELAB"
+    post_bm "Kubernetes docs" "https://kubernetes.io/docs/" "hexagon-multiple" "$CAT_HOMELAB"
+
+    # Web — search + common dev / video
+    post_bm "DuckDuckGo" "https://duck.com/" "duck" "$CAT_WEB"
+    post_bm "Brave Search" "https://search.brave.com/" "shield-crown" "$CAT_WEB"
+    post_bm "GitHub" "https://github.com/" "github" "$CAT_WEB"
+    post_bm "YouTube" "https://www.youtube.com/" "youtube" "$CAT_WEB"
+
+    # Courses & games — learning platforms + storefronts
+    post_bm "edX" "https://www.edx.org/" "school" "$CAT_LEARN"
+    post_bm "Coursera" "https://www.coursera.org/" "book-education" "$CAT_LEARN"
+    post_bm "Udemy" "https://www.udemy.com/" "play-circle" "$CAT_LEARN"
+    post_bm "Khan Academy" "https://www.khanacademy.org/" "lightbulb-on" "$CAT_LEARN"
+    post_bm "MIT OpenCourseWare" "https://ocw.mit.edu/" "university" "$CAT_LEARN"
+    post_bm "Steam" "https://store.steampowered.com/" "steam" "$CAT_LEARN"
+    post_bm "Epic Games Store" "https://store.epicgames.com/" "gamepad-variant" "$CAT_LEARN"
+    post_bm "GOG" "https://www.gog.com/" "disc" "$CAT_LEARN"
+    post_bm "Humble" "https://www.humblebundle.com/" "gift-outline" "$CAT_LEARN"
+    post_bm "itch.io" "https://itch.io/" "controller" "$CAT_LEARN"
+
+    # --- Success: bookmark rows live in Flame’s DB on the Longhorn PVC ---
+    echo "Seed completed."
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: flame-seed
+  namespace: ctnr
+  labels:
+    app: flame
+spec:
+  ttlSecondsAfterFinished: 86400
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: flame
+        component: seed
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed
+          image: alpine:3.19
+          command:
+            - /bin/sh
+            - -c
+            - |
+              apk add --no-cache curl jq >/dev/null
+              exec /bin/sh /scripts/seed.sh
+          env:
+            - name: FLAME_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flame
+                  key: password
+          volumeMounts:
+            - name: seed
+              mountPath: /scripts
+              readOnly: true
+      volumes:
+        - name: seed
+          configMap:
+            name: flame-seed
+            defaultMode: 0755
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flame
+  namespace: ctnr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flame
+  template:
+    metadata:
+      labels:
+        app: flame
+    spec:
+      containers:
+        - name: flame
+          image: pawelmalak/flame:latest
+          ports:
+            - containerPort: 5005
+              name: http
+          env:
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flame
+                  key: password
+          volumeMounts:
+            - name: flame-data
+              mountPath: /app/data
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: flame-data
+          persistentVolumeClaim:
+            claimName: flame-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flame
+  namespace: ctnr
+spec:
+  type: ClusterIP
+  selector:
+    app: flame
+  ports:
+    - name: http
+      port: 5005
+      targetPort: http
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flame
+  namespace: ctnr
+  labels:
+    app: flame
+spec:
+  rules:
+    - host: flame.lab.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: flame
+                port:
+                  number: 5005
