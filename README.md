@@ -1,24 +1,24 @@
-# Homelab Notes, Stacks, Configs, and Scripts
+# Homelab
 
-A comprehensive collection of homelab configurations, deployment stacks, Kubernetes manifests, and utility scripts for self-hosted infrastructure.
+Configurations, Docker Compose stacks, Kubernetes manifests, shared configs, and scripts for self-hosted infrastructure.
 
 ---
 
-## 📁 Folder Structure
+## Repository layout
 
 ```
 homelab/
-├── configs/           # Configuration files for networking and dashboards
-├── images/            # Custom Docker images
-├── kubernetes/        # Kubernetes manifests and storage configuration
-├── notes/             # Documentation and setup guides
-├── scripts/           # Utility and automation scripts
-└── stacks/            # Docker/Podman compose files for services
+├── configs/           # Shared configs (network, Homepage ConfigMap source, etc.)
+├── docs/              # Setup guides and long-form notes
+├── images/            # Custom container images
+├── kubernetes/        # K8s manifests: apps/, kubevirt/, storage/ (see kubernetes/README.md)
+├── scripts/           # Utilities and automation
+└── stacks/            # Docker/Podman Compose services
 ```
 
 ---
 
-## 🐳 [Stacks](stacks/)
+## [Stacks](stacks/)
 
 Docker Compose files for self-hosted services. Podman is preferred over Docker. All services are configured for local network access only (no TLS). More detail: [stacks/README.md](stacks/README.md).
 
@@ -48,44 +48,47 @@ Docker Compose files for self-hosted services. Podman is preferred over Docker. 
 
 ---
 
-## ☸️ [Kubernetes](kubernetes/)
+## [Kubernetes](kubernetes/)
 
-Manifests for K3s cluster workloads and storage configuration.
+Index: [kubernetes/README.md](kubernetes/README.md).
+
+### [Storage](kubernetes/storage/)
 
 | File | Purpose |
 |------|---------|
-| [`nfs_storage_class.yaml`](kubernetes/nfs_storage_class.yaml) | NFS CSI StorageClass configuration |
+| [`nfs_storage_class.yaml`](kubernetes/storage/nfs_storage_class.yaml) | NFS CSI StorageClass |
 
-### [Application Manifests](kubernetes/application_manifests/)
+### [Apps](kubernetes/apps/)
 
-Kubernetes deployments, VMs, and data resources.
+Deployments, services, and related resources.
 
 | Manifest | Purpose |
 |----------|---------|
-| [`firefox.yaml`](kubernetes/application_manifests/firefox.yaml) | LinuxServer Firefox; Longhorn `/config`; Service ports **3000** / **3001** (NodePort) |
-| [`jellyfin.yaml`](kubernetes/application_manifests/jellyfin.yaml) | LinuxServer Jellyfin; Longhorn `/config`, NFS PVC `/data`; Service **8096** (NodePort) |
-| [`qbittorrent.yaml`](kubernetes/application_manifests/qbittorrent.yaml) | LinuxServer qBittorrent; Longhorn `/config`, NFS PVC `/downloads`; **8080** Web UI + **6881** TCP/UDP (NodePort) |
-| [`filebrowser.yaml`](kubernetes/application_manifests/filebrowser.yaml) | [`filebrowser/filebrowser:s6`](https://hub.docker.com/r/filebrowser/filebrowser) (LinuxServer-style **PUID**/**PGID**); Longhorn `/config` + `/database`, NFS PVC `/srv`; Service **80** (NodePort) |
-| [`homepage.yaml`](kubernetes/application_manifests/homepage.yaml) | [Homepage](https://gethomepage.dev/) dashboard; `kube-system`; ClusterIP service **3000**; RBAC + embedded config (see also [`configs/homepage_config.yaml`](configs/homepage_config.yaml)) |
-| [`kafka.yaml`](kubernetes/application_manifests/kafka.yaml) | Strimzi **Kafka** (`kafka` namespace); plain listener **9092** (NodePort), TLS **9093** (internal) |
-| [`garage_s3.yaml`](kubernetes/application_manifests/garage_s3.yaml) | [Garage](https://garagehq.deuxfleurs.fr/) S3-compatible storage (`garage` namespace) |
-| [`brave.yaml`](kubernetes/application_manifests/brave.yaml) | LinuxServer Brave browser (`brave` namespace); NodePort **3000** / **3001** |
-| [`websurfx.yaml`](kubernetes/application_manifests/websurfx.yaml) | WebSurfx metasearch (`websurfx` namespace); NodePort **8080** |
+| [`firefox.yaml`](kubernetes/apps/firefox.yaml) | LinuxServer Firefox; Longhorn `/config`; NodePort **3000** / **3001** |
+| [`jellyfin.yaml`](kubernetes/apps/jellyfin.yaml) | LinuxServer Jellyfin; Longhorn `/config`, NFS PVC `/data`; NodePort **8096** |
+| [`qbittorrent.yaml`](kubernetes/apps/qbittorrent.yaml) | LinuxServer qBittorrent; Longhorn `/config`, NFS PVC `/downloads`; **8080** Web UI + **6881** TCP/UDP (NodePort) |
+| [`filebrowser.yaml`](kubernetes/apps/filebrowser.yaml) | [`filebrowser/filebrowser:s6`](https://hub.docker.com/r/filebrowser/filebrowser); Longhorn `/config` + `/database`, NFS PVC `/srv`; NodePort **80** |
+| [`homepage.yaml`](kubernetes/apps/homepage.yaml) | [Homepage](https://gethomepage.dev/) in `kube-system`; ClusterIP **3000**; apply [`configs/homepage_config.yaml`](configs/homepage_config.yaml) first |
+| [`flame.yaml`](kubernetes/apps/flame.yaml) | [Flame](https://github.com/pawelmalak/flame) dashboard in `ctnr`; seed job mirrors links from `configs/homepage_config.yaml` |
+| [`kafka.yaml`](kubernetes/apps/kafka.yaml) | Strimzi Kafka (`kafka` namespace); plain **9092** (NodePort), TLS **9093** (internal) |
+| [`garage_s3.yaml`](kubernetes/apps/garage_s3.yaml) | [Garage](https://garagehq.deuxfleurs.fr/) S3-compatible storage (`garage` namespace) |
+| [`brave.yaml`](kubernetes/apps/brave.yaml) | LinuxServer Brave (`brave` namespace); NodePort **3000** / **3001** |
+| [`websurfx.yaml`](kubernetes/apps/websurfx.yaml) | WebSurfx metasearch (`websurfx` namespace); NodePort **8080** |
 
-### [Random / experimental manifests](kubernetes/random_manifests/)
+### [KubeVirt](kubernetes/kubevirt/)
 
-KubeVirt- and data-volume–related samples kept for reference: Debian 12 data volume, mini VM, Puppy Linux VM. Not the primary path for the application manifests above. Heavier experiments (Kafka, Garage, browsers, WebSurfX) live under [`application_manifests/`](kubernetes/application_manifests/) instead.
+VM definitions, data volumes, and cluster automation (for example periodic VMI ping health). Reference material alongside the heavier workloads in `apps/`.
 
-### Key Components
+### Cluster components (typical)
 
-- **Storage**: Longhorn (distributed storage), NFS CSI provisioner
-- **Networking**: Multus CNI for multi-network pods
-- **Virtualization**: KubeVirt for running VMs in Kubernetes
-- **Data Import**: CDI (Containerized Data Importer)
+- **Storage**: Longhorn, NFS CSI
+- **Networking**: Multus
+- **Virtualization**: KubeVirt
+- **Data import**: CDI
 
 ---
 
-## 🔧 [Scripts](scripts/)
+## [Scripts](scripts/)
 
 Utility scripts for system administration and automation.
 
@@ -102,7 +105,7 @@ Utility scripts for system administration and automation.
 
 ---
 
-## ⚙️ [Configs](configs/)
+## [Configs](configs/)
 
 Configuration files for network and application setup.
 
@@ -113,11 +116,11 @@ Configuration files for network and application setup.
 
 ### Homepage Dashboard
 
-A single Kubernetes ConfigMap ([`homepage_config.yaml`](configs/homepage_config.yaml)) containing all [Homepage](https://gethomepage.dev/) dashboard configuration: services, bookmarks, widgets, custom CSS, Kubernetes integration, and settings. The checked-in manifest uses the **`kube-system`** namespace (same as [`homepage.yaml`](kubernetes/application_manifests/homepage.yaml)).
+A single Kubernetes ConfigMap ([`homepage_config.yaml`](configs/homepage_config.yaml)) containing all [Homepage](https://gethomepage.dev/) dashboard configuration: services, bookmarks, widgets, custom CSS, Kubernetes integration, and settings. The checked-in manifest uses the **`kube-system`** namespace (same as [`homepage.yaml`](kubernetes/apps/homepage.yaml)).
 
 ---
 
-## 🐋 [Images](images/)
+## [Images](images/)
 
 Custom Docker images for specialized workloads.
 
@@ -138,16 +141,14 @@ docker build -t gcsfuse:latest .
 
 ---
 
-## 📝 [Notes](notes/)
+## [Documentation](docs/)
 
-Setup guides and documentation for common tasks.
-
-| Note | Description |
-|------|-------------|
-| [`alpine_linux_docker_install.md`](notes/alpine_linux_docker_install.md) | Docker setup on Alpine Linux |
-| [`autossh_setup.md`](notes/autossh_setup.md) | Persistent reverse SSH tunnel with systemd autostart |
-| [`linux_kernel_compilation.md`](notes/linux_kernel_compilation.md) | Custom kernel compilation guide |
-| [`new_k3s_node_&_cluster_setup.md`](notes/new_k3s_node_%26_cluster_setup.md) | Complete K3s HA cluster setup guide |
+| Document | Description |
+|----------|-------------|
+| [`alpine_linux_docker_install.md`](docs/alpine_linux_docker_install.md) | Docker on Alpine Linux |
+| [`autossh_setup.md`](docs/autossh_setup.md) | Persistent reverse SSH tunnel with systemd |
+| [`linux_kernel_compilation.md`](docs/linux_kernel_compilation.md) | Custom kernel build |
+| [`new_k3s_node_&_cluster_setup.md`](docs/new_k3s_node_%26_cluster_setup.md) | K3s HA cluster setup |
 
 ### K3s Cluster Setup Includes
 
@@ -161,7 +162,7 @@ Setup guides and documentation for common tasks.
 
 ---
 
-## 🏗️ Infrastructure Overview
+## Infrastructure overview
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -176,7 +177,7 @@ Setup guides and documentation for common tasks.
 │         └───────┬───────┘                               │
 │                 ▼                                       │
 │  ┌─────────────────────────────────────────────────┐    │
-│  │              K3s HA Cluster                     │    │
+│  │                 K3s HA Cluster                  │    │
 │  │  ┌─────────┐ ┌─────────┐ ┌─────────────────┐    │    │
 │  │  │Longhorn │ │KubeVirt │ │ Homepage        │    │    │
 │  │  │Storage  │ │   VMs   │ │ Dashboard       │    │    │

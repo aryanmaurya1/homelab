@@ -1,7 +1,7 @@
 # KubeVirt: periodically ping every VirtualMachineInstance (all namespaces).
 # If no reported IP responds to ICMP (10 probes), delete the VMI so the VM can be recreated.
 #
-# Apply: kubectl apply -f kubevirt_vmi_ping_health_cronjob.yaml
+# Apply: kubectl apply -f kubernetes/kubevirt/kubevirt_vmi_ping_health_cronjob.yaml
 # Adjust namespace below if kube-system is not desired (ServiceAccount + CronJob only).
 
 ---

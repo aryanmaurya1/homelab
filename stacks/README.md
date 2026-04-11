@@ -1,8 +1,8 @@
-# Homelab Docker/Podman Stacks
+# Docker / Podman stacks
 
-Self-hosted services running via Docker Compose. [Podman](https://podman.io) is preferred over Docker.
+Compose files for self-hosted services. [Podman](https://podman.io) is preferred over Docker. The rest of this repository (Kubernetes, `docs/`, scripts) is described in the [root README](../README.md).
 
-## 📋 Overview
+## Overview
 
 - All services are configured for **local network access only** (no TLS)
 - Use [Portainer](portainer/) for container management UI
@@ -12,7 +12,7 @@ Self-hosted services running via Docker Compose. [Podman](https://podman.io) is 
 
 ---
 
-## 🚀 Quick Start
+## Quick start
 
 ```bash
 cd <service-folder>
@@ -24,16 +24,16 @@ podman-compose up -d
 
 ---
 
-## 📊 Service Categories
+## Service categories
 
-### 🖥️ Dashboards & Management
+### Dashboards and management
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
 | Heimdall | [heimdall/](heimdall/) | 80, 443, 8080 | 80, 443 | Application dashboard |
 | Portainer | [portainer/](portainer/) | 8081 | 9000 | Container management UI |
 
-### 🎬 Media Servers
+### Media servers
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
@@ -41,7 +41,7 @@ podman-compose up -d
 | Immich | [immich/](immich/) | 80, 443 | 2283 | Photo & video management |
 | Dim | [dim/](dim/) | 8089 | 8000 | Media manager |
 
-### 📚 Digital Libraries
+### Digital libraries
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
@@ -49,7 +49,7 @@ podman-compose up -d
 | Komga | [komga/](komga/) | 8092 | 25600 | Comics & manga server |
 | Stump | [stump/](stump/) | 8091 | 10801 | Comics server |
 
-### 📥 Download Tools
+### Download tools
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
@@ -58,7 +58,7 @@ podman-compose up -d
 | Prowlarr | [prowlarr/](prowlarr/) | 8087 | 9696 | Indexer manager |
 | Sonarr | [sonarr/](sonarr/) | 8086 | 8989 | TV series manager |
 
-### 📁 File Management
+### File management
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
@@ -68,28 +68,28 @@ podman-compose up -d
 | DockerFTP | [dockerftp/](dockerftp/) | 8095, 8096 | 20, 21 | FTP server |
 | NFS | [nfs/](nfs/) | 2049 | 2049 | Network file sharing |
 
-### 🌐 Web Browsers
+### Web browsers
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
 | Firefox | [firefox/](firefox/) | 8081 | 5800 | Firefox in container |
 | Librewolf | [librewolf/](librewolf/) | 8082 | 3000 | Privacy-focused browser |
 
-### ☁️ Cloud & Productivity
+### Cloud and productivity
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
 | Nextcloud | [nextcloud/](nextcloud/) | 80 | 80 | Self-hosted cloud storage |
 | Code-Server | [codeserver/](codeserver/) | 8094 | 8080 | VS Code in browser |
 
-### 🔒 Networking & DNS
+### Networking and DNS
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
 | Pihole | [pihole/](pihole/) | 53, 8080 | 53, 80 | DNS & ad blocker |
 | Twingate | [twingate/](twingate/) | - | - | Zero trust network access |
 
-### 🌍 Web Servers
+### Web servers / reverse proxies
 
 | Service | Folder | Description |
 |---------|--------|-------------|
@@ -97,7 +97,7 @@ podman-compose up -d
 | Nginx Proxy Manager | [webservers/nginx-proxy-manager/](webservers/nginx-proxy-manager/) | Reverse proxy with GUI |
 | Traefik | [webservers/traefik/](webservers/traefik/) | Cloud-native reverse proxy |
 
-### 🛠️ Other Services
+### Other services
 
 | Service | Folder | Host Port | Container Port | Description |
 |---------|--------|-----------|----------------|-------------|
@@ -106,7 +106,7 @@ podman-compose up -d
 
 ---
 
-## 🖧 Host Services
+## Host services
 
 | Service | Port | Description |
 |---------|------|-------------|
@@ -114,17 +114,17 @@ podman-compose up -d
 
 ---
 
-## 📝 Notes
+## Notes
 
 - **Pihole** and **Nextcloud** are deployed in a separate Alpine Linux VM for isolation
 - **Portainer-Agent** (port `9001`) enables remote management from main Portainer instance
 
 ---
 
-## 📁 Folder Structure
+## Folder layout
 
 ```
-Stacks/
+stacks/
 ├── codeserver/
 ├── dim/
 ├── dockerftp/
