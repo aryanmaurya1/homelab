@@ -71,6 +71,7 @@ Deployments, services, and related resources.
 | [`homepage.yaml`](kubernetes/apps/homepage.yaml) | [Homepage](https://gethomepage.dev/) in `kube-system`; ClusterIP **3000**; apply [`configs/homepage_config.yaml`](configs/homepage_config.yaml) first |
 | [`flame.yaml`](kubernetes/apps/flame.yaml) | [Flame](https://github.com/pawelmalak/flame) dashboard in `ctnr`; seed job mirrors links from `configs/homepage_config.yaml` |
 | [`kafka.yaml`](kubernetes/apps/kafka.yaml) | Strimzi Kafka (`kafka` namespace); plain **9092** (NodePort), TLS **9093** (internal) |
+| [`ollama.yaml`](kubernetes/apps/ollama.yaml) | [Ollama](https://ollama.com/) (`ollama` namespace); Longhorn PVC for model data; ClusterIP **11434**; pinned to node **duo** |
 | [`garage_s3.yaml`](kubernetes/apps/garage_s3.yaml) | [Garage](https://garagehq.deuxfleurs.fr/) S3-compatible storage (`garage` namespace) |
 | [`brave.yaml`](kubernetes/apps/brave.yaml) | LinuxServer Brave (`brave` namespace); NodePort **3000** / **3001** |
 | [`websurfx.yaml`](kubernetes/apps/websurfx.yaml) | WebSurfx metasearch (`websurfx` namespace); NodePort **8080** |
