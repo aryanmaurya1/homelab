@@ -242,6 +242,25 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snaps
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v8.5.0/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
 ```
 
+### VolumeSnapshotClass
+
+The CRDs above only register the `VolumeSnapshotClass` API type. Longhorn does not create a default class; add one after Longhorn is installed (CSI driver `driver.longhorn.io` must exist).
+
+```shell
+kubectl apply -f - <<'EOF'
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: longhorn
+driver: driver.longhorn.io
+deletionPolicy: Delete
+EOF
+
+kubectl get volumesnapshotclass
+```
+
+- [Enable CSI Snapshot Support (Longhorn 1.11.1)](https://longhorn.io/docs/1.11.1/snapshots-and-backups/csi-snapshot-support/enable-csi-snapshot-support/)
+
 ## Install Multus
 
 HelmChart CR lives in `kube-system` (default cluster namespace; no extra manifest needed). The NAD below targets workloads in `virt`; the file lists `Namespace` first so one `kubectl apply -f` creates `virt` before the definition.
