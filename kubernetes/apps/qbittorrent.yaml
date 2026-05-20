@@ -78,3 +78,5 @@ spec:
       port: 6881
       targetPort: 6881
       protocol: UDP
+
+# kubectl -n ctnr exec deploy/qbittorrent -- sh -c 'rm -f /config/qBittorrent/lockfile /config/qBittorrent/ipc-socket && s6-svc -u /run/s6-rc/servicedirs/svc-qbittorrent'
