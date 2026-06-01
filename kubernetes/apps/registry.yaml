@@ -3,22 +3,134 @@ kind: Namespace
 metadata:
   name: registry
 ---
+# PersistentVolumeClaim for registry image storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry-data
+  namespace: registry
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: longhorn
+---
+# TLS certificate for the registry (self-signed).
+# Regenerate with: openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt
+#   -days 3650 -nodes -subj "/CN=uno.lab.local" -addext "subjectAltName=DNS:uno.lab.local"
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-tls
+  namespace: registry
+type: kubernetes.io/tls
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZZekNDQTB1Z0F3SUJBZ0lVWEM5bGRqbForQWc4Zmt4YU5IUzBzdjkxTDNZd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0dERVdNQlFHQTFVRUF3d05kVzV2TG14aFlpNXNiMk5oYkRBZUZ3MHlOakEyTURFeE9USTFOVEJhRncwegpOakExTWpreE9USTFOVEJhTUJneEZqQVVCZ05WQkFNTURYVnVieTVzWVdJdWJHOWpZV3d3Z2dJaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUNEd0F3Z2dJS0FvSUNBUUM4SzhvZnc2SkF4eTQ1eTRQS2l1ZDdOams1Z0xVaXBOakYKWVNTRXozVy9iS0JNMmdyRU1KUkQzS3pIYVdJWlBteFFsSW1UNXZYMTQxdHg4QzRhanZqQUF6NXhOR0RHcXZiZApYdjVxYWFVU1hFZmV1cVRsQmlMdnVuNFF0UHcrQ2ozWlQvWnRJZGNSV21IK21SS3lQNDFSSVRMRnpWd01haWx5Ci9RTCtPZzJwMWtJYVg4L0VpSFhnTzNoZTZQdnd6N0hnVUVBVTlVSERDV0lGN1Q5WC9SNHQ5YXJSZUMxeTFnZXUKbkR6RS9IYzk4OFIzVEVkZjdPOGlCRXNKZzBldHN0OVZudzVSRWI5ZGhFOWp0UG1nTjBqOFNjTjV1VGZpbGl3agp6NFhIMGNJKy9pTG5PTnF1OTF4ZlB6MXJZdmo1UGN4bmdpQW0xbTdFd2djdlh3dnJvc0UvWm9hSVR2T1lkQ1UrCkxsNVIzNi81ZDdrZ0oxdEJFWU5lMzJKdmI0MFpWNTI3VjZ6YlYwaVpnMUJlZng4dXU3SWpITFNGLzV4LzNDQjAKc3RGQW5vNEpCckZjaDd6d3VTVTR6QzNPcjRlRXNrWkxrSFNQQWRqQkJ5b1BIMlBqUldYdk94U1d2elJUYkRUQQpCTDNOd1duOHBCamtIcFNaa2NabmhjdGY5RkJKSDZHSlA0bkN6QnFOT285VUhaTzNnQkFrRWFJMTRFM1NZd3hWCjFCc1UydVE3U3VoRXNKNlUyVnZkSURNdm05MkEwd1NmSklqVUo5K2cyY1BnaWIrb29LR0VnaHViWlExM0RFUEMKZkxSS3pyQ2YzaU9IbFFqR0E5cVFGUUFUdWVoL0dPYkRPN25wQWRBanJFQnlpcXJSOWVpYWllTjlCOHRvSDJaNAp2OEVYZFB6dzR3SURBUUFCbzRHa01JR2hNQjBHQTFVZERnUVdCQlRtbmNpK0t2cjZ2Tno0cGhqc2lxbFMrYWpJCjREQWZCZ05WSFNNRUdEQVdnQlRtbmNpK0t2cjZ2Tno0cGhqc2lxbFMrYWpJNERBUEJnTlZIUk1CQWY4RUJUQUQKQVFIL01FNEdBMVVkRVFSSE1FV0NEWFZ1Ynk1c1lXSXViRzlqWVd5Q0kzSmxaMmx6ZEhKNUxuSmxaMmx6ZEhKNQpMbk4yWXk1amJIVnpkR1Z5TG14dlkyRnNnZ2xzYjJOaGJHaHZjM1NIQkg4QUFBRXdEUVlKS29aSWh2Y05BUUVMCkJRQURnZ0lCQUVtNkx6dlZnU2VxNFBTRnk2cktvWjZPU3V4ZmJLRnd3ZXAwYzM5QXBEbzRMUHpEc1ZnRVhvdDkKU0gzWWJqWlNPRU5QWG9aL1dWZE8vSjkyS1E2Ri9Lc3YvRXU1YkltcnZCVm14OEpyQ2tsN1pOVWZLcTdkSlFxcgpHK2lJUlcyeWlhRGpPb3FuZUZiWThqNHlwMVprYkI3WUsxNkxFSUFMclp1SjlPL0F0aWNkZkRwRG1VQXVjUlZICjZYUU8rR2dYSTdXWDBKRTkxVHlkdGhHZzZVZGRJb1NaYUNDRXJITFdXenpTeUQ4bkFHNzFwRG1vWnlaRUZvL3EKQThNRk5JVWpFSG51eHZOVlpvTXJqZlgwNDMwcVRhcEFUOUNTeUxObnRUV3ZWT3dnbVVodjMxbzJ3RXlrYlMyYgo1bnJrcWVLUEp1SlRUd3J2R1VPbnVFR1hRbWo5d0RIQnlhN0xKM2NLSzNobDRlUlhkWHlLMjFCcDRpckw4VXlBCjg5R0pVRUJZQWJsWTVYS3VTU3JXNzBxNStPbUhtWThydEZzeGJZYk5odFdmMC9sL2NjaHhibmdxTG45Vm5pbXcKYTVoOUpHYVlrOUhaZnM1dGJRem1WUnUreCt3bGZJeVROdXl1ZGh1M1VTL3l3eUxSQXV5dm9mdTkrYXRhcHlYNApickdndmdLbDlNTVNYKzFQVzhPSFFmSDV3d2lrREZQTzVpOG9NenJyUDFhWHllbTR1VEN3MDBhZTlGRnNJdEdHClBxUWU2VUpwR2UxSTdZejAzeWU2bUMwcEV3Wk9PVFp2ZExhWFJrTHhadWVoOFBTYm1MOG4zVkoxMHZ4b0JjTTIKMnNTTDRpeUp5Wlk1Rml0dzNhSXRjcGozVFpXdkJvYjdjL0NjUHJLTWtMTG9JVitnVEZGZAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUpRZ0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQ1N3d2dna29BZ0VBQW9JQ0FRQzhLOG9mdzZKQXh5NDUKeTRQS2l1ZDdOams1Z0xVaXBOakZZU1NFejNXL2JLQk0yZ3JFTUpSRDNLekhhV0laUG14UWxJbVQ1dlgxNDF0eAo4QzRhanZqQUF6NXhOR0RHcXZiZFh2NXFhYVVTWEVmZXVxVGxCaUx2dW40UXRQdytDajNaVC9adElkY1JXbUgrCm1SS3lQNDFSSVRMRnpWd01haWx5L1FMK09nMnAxa0lhWDgvRWlIWGdPM2hlNlB2d3o3SGdVRUFVOVVIRENXSUYKN1Q5WC9SNHQ5YXJSZUMxeTFnZXVuRHpFL0hjOTg4UjNURWRmN084aUJFc0pnMGV0c3Q5Vm53NVJFYjlkaEU5agp0UG1nTjBqOFNjTjV1VGZpbGl3ano0WEgwY0krL2lMbk9OcXU5MXhmUHoxcll2ajVQY3huZ2lBbTFtN0V3Z2N2Clh3dnJvc0UvWm9hSVR2T1lkQ1UrTGw1UjM2LzVkN2tnSjF0QkVZTmUzMkp2YjQwWlY1MjdWNnpiVjBpWmcxQmUKZng4dXU3SWpITFNGLzV4LzNDQjBzdEZBbm80SkJyRmNoN3p3dVNVNHpDM09yNGVFc2taTGtIU1BBZGpCQnlvUApIMlBqUldYdk94U1d2elJUYkRUQUJMM053V244cEJqa0hwU1prY1puaGN0ZjlGQkpINkdKUDRuQ3pCcU5PbzlVCkhaTzNnQkFrRWFJMTRFM1NZd3hWMUJzVTJ1UTdTdWhFc0o2VTJWdmRJRE12bTkyQTB3U2ZKSWpVSjkrZzJjUGcKaWIrb29LR0VnaHViWlExM0RFUENmTFJLenJDZjNpT0hsUWpHQTlxUUZRQVR1ZWgvR09iRE83bnBBZEFqckVCeQppcXJSOWVpYWllTjlCOHRvSDJaNHY4RVhkUHp3NHdJREFRQUJBb0lDQUR5QlZCZk1ueEozT1Z6cUhMRjI0cUhTCnVLbk53ZkNtMHZEOG9ISjRCdU9MZVN2Yy9KTkRENW1XanBQOFJjZmFNNmZoZXk5c2wyLytNRHc5djRWWXJaR0kKT1g3TEdjY24yQU1zZFdBZ0lpejZNVDNrQS91RWNwMWsrUDVFUTh0ckhhSVB2U3d3TW1ocENKT0dBdVgvMjEvWAo3ZXgrY1Blbzl6VDdPQWdwQUpXNHlENlV5a2ptbkFpQzl0eUZ5K1VOMDZOT0NwenlrN2V6LzZucU5IRUZlYnZMCmY2YWxIdkFLOUNOb0ozNHJzK2ZleHpDWS9XWlIyRDYyNUszbFlabnZwekp2MTNtbjNFR2t0cVpYM2VCdmhtOWgKQkpMU1JLNytIS2xUSkRBeE9XVnA4QzByTWQ0S3VkQUNsS3hBQWRDYTEydjlBbnVhZmJtVXJoekVVaC90a0hkVwpSVXZ4VDFQZmU3QWZ5Y210QjVDYXZLdy95THpTWjlJR0VRMTJLZWIzbGR2a2JYSjgybVB6bUF1TkJnK3FWbi9mCjZON2NFMktIaWYwZ055KzNva0JIZmJwRkF4R0xmTGxOcFRycEVFQTNIZkt5WlI2amszTTR5cmRFcTh0Nnhha1cKVnRwOU5lZ0E0TTdmOE9QL09BVWZiTllvOVdWZlFNVk1Fd1BFTjBVMURabzhXUW1Wakhzb1NuNGFKWjQreVlRUwpPdDROUE5NRkh4bk5FRFV4dWFWeTAralExWTh2QmlzTVJISUp3aWttQVZPUkFvYzB4d3hsTjJRaTg4YzRJSW5HCjZUaVJWL1hHTlQ2VmsyY1VYWm80eDhINmhiRGpScENzYVBVdXIveXNzRk9oODBMak14aVp3Y1J0RWZ6NUhWVloKcGsvR0lqSEkvMlUycVhCV0ZTYUpBb0lCQVFEZTF4bDdjRVYxKzBpRlVaemxhdkNlSEM1RXZEM05jVjU2anRPZgpqRDFTRldlMlZLT3BRU0tSenZDckdTOElpSGw4NWhNc3lrYWlmRUE1TEFHQlArMTIzUkIwWm93QUZUTGUycHdUCjZHTVJNZ09IYlRUYkN4c0VTTDV2UmZQMU5kTmRuMktUZHl0dExISElrZGlVSVh0VG42bUdTRTI1akZGTWV0d0EKMHcvUkVjbTBrckpVMHA1eXAyY0wwZ0hubHkxQ25ST2JPUXptYkdHbklMSnZ0Z0RyNXJvbTVTSnVyU0JKZjdjUQpqWXNvZXdNc21FSEJLazhFcXgwbWs1MjdXSHpjM3ZiQ0RPc0htaHNxVzZTSjArWFFOYlYxdzdHWVpuUHlpWW44ClZ1ZkRCMWdmOGUvVSttTFBSbnFlZkJ2OXNMU3dPN2VNSUJiN2RtbWF0ejhlQ2dlOUFvSUJBUURZSy8rYUJqSHQKZHlSbXFSa0xnVTUwc2JmeDE5S2ZZWUd3WTBSenJCbDhYbWpRTlZwaU9iK2pnSEY0eTNqc0g3WHB6ZlFJYmExagpPeERqOXBGV0EzVXV2WXZobkUvZXFIeDNGR0p1bGdxRXp1ckxGa2d0QmFxZjZMeXVZUVArcSthMFQvdlFlZmxOCkRQOXh6eDhmbXFXOTFTS3FWTmc0emNFVUpqUjhsT2hsUi9MVlZWWGw4RVpKbDc0cld6OE1UeGMvWVVORFljT08KVDZxLzdGTm5mVXlBc0ZLRGJWTm9SZCtFUWM3a05mYXBDWnUrNmlySS9BaFI5WUUyTTBUSWZ6TTNQQXJDbXYrUgovc1JKQjF1TVJnSXNoTDNMYzNIVCtMaUU4UExnTUd6U0RWVzVaK3RMMW1aUDI2SE9Qb0RGYkQwdkpZeVpmbGhhCnByZTJpcytXS1pVZkFvSUJBRTZFbENIK2FUc3RFMXlHYVRZYy9ETjUwb085b0RrblhSYnFCSDhQTnZ3Wk5yWDAKRk1hcWdMZkhwdDFpdmtQUGNwOGpvbFlCMyttWXhqaGUzUmpob1paa1JrdjlaZzhSYVI5RkFBR3p2RlJ1dnZlVQo3eTdQTnZISGYvSk5QNnlERHJyS1VqMkxtKzJYMzIvQWxBTjkyS3FhYzIweFJOSEFNMVV6WlJtVlJObHgzeFNWCksramZYWjBnaHhxUElNU3RhL0V3ejV1OSttR21ocklRdjA3RlhvWEFnbzc1NWF3QnJJSzVVWk92aS96emV5YlgKYnpQVTZJcklrRGpyZ29Sa3BYcGR4YXlTU0s0aENybGVHUmZIWmc1N0hqa2tmd3NuN21yak00K0tQNWRrbXhTRwpkdThnV25pV2FOWTIvTlhpMFlmWFF0Rkk3VkFsWlFoeTBQYVFxakVDZ2dFQkFLK1daWUxGZjI2RWRSUFNUSjZVCnhKWnkrSmUvbDd5UUpoaVJPVHUvMGQrOGkrUjdRZFJCVmhGSHRtUEkyb3JwWXdqcm1rbnlWSUVpckNDTzJoU0UKc0gxcnh5QlZxR2FTY3E4QzVzVXVxSktoeEFOOE1Ob3BIU1BRbHRvSndZWHVPWEhDK2lhbnZNRkNTb2MyRnZERAoyOWFyTmdJbThvNkpTa2pFazZPU0RJYWYvM1liWDY5ckVKeWNYZ0szbGltNFlJakJ4eklIU2lIaFFpK3NsVDZkCmZ6T1VoU0Z0L3U3V3VxeWlDNXhBM1A4RzUvUVdIdlNzQzFJUFdZb2Q4TVB1MWpvS1VpOHFXV2RNQ2tITGNTZ3EKZ1grSnZ1UnYvRWlTWWNiU05HVzN6OXg2cW1QMExpS21udXBFMjFROFhycDlwZUVTM2ZhYnNzYkhYcmd1WGxsNQpvejhDZ2dFQWRKdDdHYklRSjVJUmRjQ1BtZmM2eUVqOVZzamQvYlluTDJWd0tyRUVONnhLMG9UcWMzTHBxYVg1Cjg0dURCSm1GZWxaaVMvak9vMWRQb3lJL01BVmp4Njl4RmlaZ0Y2anZSMUVwSlNOVEFkUjNkN1NPeDh1eDVjMnAKcmZnMjRNcm5nSDNBLzcvdjRlMnpqcS9VQ0FlczB6NkdzaGo5YldaL2UwTXFyOHAwRU5XRnVxV2ovUTUyNGJUaQpFV0tJWjdaaktqcUpENEdZa29peTJQR0ljQ0dJc0JyRXpjbDEyK3RQVGhLbWlLU3lZODAzMmkydGFIRndHQ0t0Cm1Sam5yUFprcVNvMDJORzlFUkFRWkdmZzlLMVZQUHR0aVJpRzg1cm1hMU4yQWtXV0pubFpUQUUzL21oL0VhNnEKcXZiSnJrY0xXV0pHWnBQQng5ZTROSmhsUGN5YUtRPT0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQo=
+---
+# Registry configuration with TLS, CORS, and storage settings.
+# The registry requires HTTPS because TLS is configured here.
+# CORS headers allow the registry-ui to make same-origin proxy calls.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-config
+  namespace: registry
+data:
+  config.yml: |
+    version: 0.1
+    log:
+      level: info
+    http:
+      addr: :5000
+      tls:
+        certificate: /etc/ssl/registry/tls.crt
+        key: /etc/ssl/registry/tls.key
+      headers:
+        Access-Control-Allow-Origin: ['http://uno.lab.local:30501']
+        Access-Control-Allow-Methods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE']
+        Access-Control-Allow-Headers: ['Authorization', 'Accept', 'Content-Type']
+        Access-Control-Max-Age: [1728000]
+        Access-Control-Allow-Credentials: [true]
+    storage:
+      delete:
+        enabled: true
+      filesystem:
+        rootdirectory: /var/lib/registry
+---
+# Custom nginx config for registry-ui that proxies /v2 requests to the registry.
+# The registry uses HTTPS with a self-signed cert, so proxy_ssl_verify is disabled.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-ui-nginx-config
+  namespace: registry
+data:
+  default.conf: |
+    server {
+        listen       80;
+        server_name  localhost;
+
+        client_max_body_size 0;
+        client_body_buffer_size     32k;
+        client_header_buffer_size   8k;
+        large_client_header_buffers 8 64k;
+
+        chunked_transfer_encoding on;
+        proxy_ssl_server_name on;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_ignore_headers "X-Accel-Buffering";
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+
+        location /v2 {
+            if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go ).*$" ) {
+                return 404;
+            }
+            proxy_http_version 1.1;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_ssl_verify off;
+            proxy_pass https://registry:5000;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+---
+# Docker Registry v2 — serves as a private container image registry.
+# Mounts:
+#   - config:  registry config.yml (TLS, CORS, storage)
+#   - tls:     self-signed TLS cert (read-only)
+#   - data:    persistent volume for images
+#
+# Accessible externally via NodePort 30500.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-registry
+  name: registry
   namespace: registry
   labels:
-    app: docker-registry
+    app: registry
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: docker-registry
+      app: registry
   template:
     metadata:
       labels:
-        app: docker-registry
+        app: registry
     spec:
       containers:
         - name: registry
@@ -26,31 +138,56 @@ spec:
           ports:
             - containerPort: 5000
               name: http
-          env:
-            - name: REGISTRY_STORAGE_DELETE_ENABLED
-              value: "true"
           resources:
             requests:
-              memory: 256Mi
+              memory: 128Mi
               cpu: 100m
             limits:
-              memory: 512Mi
+              memory: 256Mi
               cpu: 500m
+          volumeMounts:
+            - mountPath: /etc/docker/registry
+              name: config
+            - mountPath: /var/lib/registry
+              name: data
+            - mountPath: /etc/ssl/registry
+              name: tls
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: registry-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: registry-data
+        - name: tls
+          secret:
+            secretName: registry-tls
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: docker-registry
+  name: registry
   namespace: registry
+  labels:
+    app: registry
 spec:
   selector:
-    app: docker-registry
+    app: registry
   ports:
-    - port: 5000
-      targetPort: http
+    - nodePort: 30500
+      port: 5000
+      targetPort: 5000
       name: http
   type: NodePort
 ---
+# Registry-UI — web frontend for browsing the private registry.
+#
+# REGISTRY_URL is set to empty so the JavaScript frontend makes same-origin
+# API calls (to the nginx that serves it). Those /v2 requests are then proxied
+# by nginx (via the custom default.conf) to the registry service internally.
+# This avoids the browser having to connect directly to the HTTPS-only registry
+# NodePort, which would fail due to the self-signed TLS cert.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -78,16 +215,25 @@ spec:
             - name: REGISTRY_TITLE
               value: "Private Registry"
             - name: REGISTRY_URL
-              value: "http://docker-registry:5000"
+              value: ""
             - name: SINGLE_REGISTRY
               value: "true"
           resources:
             requests:
-              memory: 128Mi
+              memory: 64Mi
               cpu: 50m
             limits:
-              memory: 256Mi
+              memory: 128Mi
               cpu: 200m
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d/default.conf
+              name: nginx-config
+              subPath: default.conf
+              readOnly: true
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: registry-ui-nginx-config
 ---
 apiVersion: v1
 kind: Service
@@ -98,7 +244,8 @@ spec:
   selector:
     app: registry-ui
   ports:
-    - port: 80
+    - nodePort: 30501
+      port: 80
       targetPort: http
       name: http
   type: NodePort
