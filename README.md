@@ -114,6 +114,7 @@ Configuration files for network and application setup.
 |--------|---------|
 | [`bridge_interface.conf`](configs/bridge_interface.conf) | Bridge networking configuration |
 | [`homepage_config.yaml`](configs/homepage_config.yaml) | Homepage dashboard Kubernetes ConfigMap |
+| [`vnc/`](configs/vnc/) | VNC remote desktop configs (i3, kitty, i3status, systemd) |
 
 ### Homepage Dashboard
 
@@ -148,6 +149,7 @@ docker build -t gcsfuse:latest .
 |----------|-------------|
 | [`alpine_linux_docker_install.md`](docs/alpine_linux_docker_install.md) | Docker on Alpine Linux |
 | [`autossh_setup.md`](docs/autossh_setup.md) | Persistent reverse SSH tunnel with systemd |
+| [`vnc_remote_desktop.md`](docs/vnc_remote_desktop.md) | i3 + TigerVNC remote desktop setup |
 | [`linux_kernel_compilation.md`](docs/linux_kernel_compilation.md) | Custom kernel build |
 | [`new_k3s_node_&_cluster_setup.md`](docs/new_k3s_node_%26_cluster_setup.md) | K3s HA cluster setup |
 
