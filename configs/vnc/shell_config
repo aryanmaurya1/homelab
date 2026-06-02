@@ -1,0 +1,39 @@
+# Colorized ls — append to ~/.bashrc (or source this file)
+export LS_OPTIONS='--color=auto'
+eval "$(dircolors)"
+alias ls='ls $LS_OPTIONS'
+alias ll='ls $LS_OPTIONS -l'
+alias l='ls $LS_OPTIONS -lA'
+
+# Nord powerline PS1
+__ps1_nord() {
+  local rc=$? e bg fg
+  e=$'\e'
+
+  # Set the prompt escapes directly (interpreted by bash prompt parser)
+  PS1="\[${e}[48;2;94;129;172m${e}[38;2;236;239;244m\] \u@\h "
+  PS1+="\[${e}[48;2;67;76;92m${e}[38;2;94;129;172m\]"
+  PS1+="\[${e}[48;2;67;76;92m${e}[38;2;216;222;233m\] \w "
+
+  local b=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  if [[ -n $b ]]; then
+    PS1+="\[${e}[48;2;129;161;193m${e}[38;2;67;76;92m\]"
+    PS1+="\[${e}[48;2;129;161;193m${e}[38;2;46;52;64m\]  $b "
+    PS1+="\[${e}[48;2;46;52;64m${e}[38;2;129;161;193m\]"
+  else
+    PS1+="\[${e}[48;2;46;52;64m${e}[38;2;67;76;92m\]"
+  fi
+
+  if [[ $rc -ne 0 ]]; then
+    PS1+="\[${e}[48;2;191;97;106m${e}[38;2;236;239;244m\]  $rc "
+    PS1+="\[${e}[48;2;0;0;0m${e}[38;2;191;97;106m\]"
+  fi
+
+  PS1+="\[${e}[0m\] "
+}
+
+PROMPT_COMMAND=__ps1_nord
+
+# Use neovim instead of vim
+alias vim='nvim'
+alias vi='nvim'
