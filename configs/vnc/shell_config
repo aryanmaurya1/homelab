@@ -7,7 +7,7 @@ alias l='ls $LS_OPTIONS -lA'
 
 # Nord powerline PS1
 __ps1_nord() {
-  local rc=$? e bg fg
+  local e
   e=$'\e'
 
   # Set the prompt escapes directly (interpreted by bash prompt parser)
@@ -22,11 +22,6 @@ __ps1_nord() {
     PS1+="\[${e}[48;2;46;52;64m${e}[38;2;129;161;193m\]"
   else
     PS1+="\[${e}[48;2;46;52;64m${e}[38;2;67;76;92m\]"
-  fi
-
-  if [[ $rc -ne 0 ]]; then
-    PS1+="\[${e}[48;2;191;97;106m${e}[38;2;236;239;244m\]  $rc "
-    PS1+="\[${e}[48;2;0;0;0m${e}[38;2;191;97;106m\]"
   fi
 
   PS1+="\[${e}[0m\] "
