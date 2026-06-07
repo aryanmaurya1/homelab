@@ -17,7 +17,7 @@ All VNC configuration lives in [`configs/vnc/`](../configs/vnc/):
 | [`configs/vnc/vncserver.service`](../configs/vnc/vncserver.service) | `/etc/systemd/system/vncserver@.service` | systemd unit for TigerVNC |
 | [`configs/vnc/wallpaper.png`](../configs/vnc/wallpaper.png) | `~/.wallpaper.png` | Desktop wallpaper |
 
-Full guide with installation steps, keybindings, and management: [`vnc_remote_desktop.md`](vnc_remote_desktop.md)
+Full guide with installation steps, keybindings, and management: [`configs/vnc/README.md`](../configs/vnc/README.md)
 
 **Reproduce on a fresh VM:** see the "Installation (from scratch)" section in the guide.
 
@@ -25,7 +25,7 @@ Full guide with installation steps, keybindings, and management: [`vnc_remote_de
 
 | Document | Description |
 |----------|-------------|
-| [`vnc_remote_desktop.md`](vnc_remote_desktop.md) | i3 + TigerVNC + Kitty remote desktop |
+| [`configs/vnc/README.md`](../configs/vnc/README.md) | i3 + TigerVNC + Kitty remote desktop |
 | [`alpine_linux_docker_install.md`](alpine_linux_docker_install.md) | Docker on Alpine Linux |
 | [`autossh_setup.md`](autossh_setup.md) | Persistent reverse SSH tunnel with systemd |
 | [`linux_kernel_compilation.md`](linux_kernel_compilation.md) | Custom kernel build steps |

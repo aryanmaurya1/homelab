@@ -149,7 +149,7 @@ Index: [`docs/README.md`](docs/README.md).
 
 | Document | Description |
 |----------|-------------|
-| [`vnc_remote_desktop.md`](docs/vnc_remote_desktop.md) | i3 + TigerVNC + Kitty remote desktop (configs in [`configs/vnc/`](configs/vnc/)) |
+| [`vnc/README.md`](configs/vnc/README.md) | i3 + TigerVNC + Kitty remote desktop |
 | [`alpine_linux_docker_install.md`](docs/alpine_linux_docker_install.md) | Docker on Alpine Linux |
 | [`autossh_setup.md`](docs/autossh_setup.md) | Persistent reverse SSH tunnel with systemd |
 | [`linux_kernel_compilation.md`](docs/linux_kernel_compilation.md) | Custom kernel build |
